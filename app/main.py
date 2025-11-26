@@ -41,10 +41,14 @@ def exit_command(args):
     global should_exit
     should_exit = True
 
+def pwd_command(args):
+    print(os.getcwd())
+
 BUILTIN_COMMANDS = {
     "echo": echo_command,
     "type": type_command,
-    "exit": exit_command
+    "exit": exit_command,
+    "pwd": pwd_command
 }
 
 def command_exists(command):
