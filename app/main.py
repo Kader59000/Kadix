@@ -49,6 +49,7 @@ def cd_command(args):
         print("cd: invalid number of arguments")
         return
     try:
+        formatted_path = ars[0].replace("~", os.path.expanduser("~"))
         os.chdir(args[0])
     except FileNotFoundError:
         print(f"cd: no such file or directory: {args[0]}", end="\n")
