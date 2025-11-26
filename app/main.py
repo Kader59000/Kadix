@@ -93,17 +93,24 @@ def is_installed_command(command):
     return find_installed_command(command) is not None
 
 def handle_input(args_str):
-    args = []
+    args = [] # list of (arg, was_quoted)
     current_arg = ''
     in_quotes = False
+    do_concatenation = False
     for i in range(len(args_str)):
         current_char = args_str[i]
         if current_char == "'" and not in_quotes:
+            if i > 0 and args_str[i-1] == "'":
+                do_concatenation = True
             in_quotes = True
         elif current_char == "'" and in_quotes:
             in_quotes = False
             if current_arg != "'":
-                args.append(current_arg)
+                if do_concatenation:
+                    args.append(args.pop() + current_arg)
+                    do_concatenation = False
+                else:
+                    args.append(current_arg)
             current_arg = ''
         elif current_char == " " and not in_quotes:
             if current_arg:
@@ -111,7 +118,7 @@ def handle_input(args_str):
                 current_arg = ''
         else:
             current_arg += current_char
-    args.append(current_arg)
+    args.append(current_arg, in_quotes)
     return args
 
         
