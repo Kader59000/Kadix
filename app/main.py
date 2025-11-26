@@ -1,5 +1,6 @@
 import sys
 
+BUILTIN_COMMANDS = ["echo", "type"]
 
 def main():
     while True:
@@ -24,9 +25,21 @@ def echo_command(args):
     print(args[-1], end="")
     print("", end="\n")
 
+def type_command(args):
+    if len(args) != 1:
+        print("type: invalid number of arguments", end="\n")
+        return
+    if (args[0] in BUILTIN_COMMANDS):
+        print(f"{args[0]} is a shell builtin", end="\n")
+    else:
+        print(f"{args[0]}: command not found", end="\n")
+
+
 def command_getter(command):
     if (command == "echo"):
         return echo_command
+    if (command == "type"):
+        return type_command
     return None
 
 
