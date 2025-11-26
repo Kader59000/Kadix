@@ -44,6 +44,15 @@ def exit_command(args):
 def pwd_command(args):
     print(os.getcwd())
 
+def cd_command(args):
+    if len(args) != 1:
+        print("cd: invalid number of arguments")
+        return
+    try:
+        os.chdir(args[0])
+    except FileNotFoundError:
+        print(f"cd: no such file or directory: {args[0]}", end="\n")
+
 BUILTIN_COMMANDS = {
     "echo": echo_command,
     "type": type_command,
