@@ -1,6 +1,6 @@
 import sys
 import os
-
+import subprocess
 should_exit = False
 
 def main():
@@ -10,9 +10,8 @@ def main():
         splitted_input = user_input.split(" ")
         command_input = splitted_input[0]
         args = splitted_input[1:]
-        command = command_getter(command_input)
-        if (command != None):
-            command(args)
+        if (command_exists(command_input)):
+            execute_command(command_input, args)
         else:
             print(f"{command_input}: command not found")
 
@@ -48,6 +47,9 @@ BUILTIN_COMMANDS = {
     "exit": exit_command
 }
 
+def command_exists(command):
+    return command in BUILTIN_COMMANDS or is_installed_command(command)
+
 def builtin_command_getter(command):
     return BUILTIN_COMMANDS.get(command, None)
 
@@ -62,8 +64,6 @@ def execute_command(command, args):
         stdout, stderr = process.communicate()
         return
     
-
-
 def find_installed_command(command):
     path = os.environ.get("PATH")
     path_separator = os.pathsep 
