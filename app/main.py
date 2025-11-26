@@ -1,6 +1,7 @@
 import sys
+import os
 
-BUILTIN_COMMANDS = ["echo", "type", "exit"]
+should_exit = False
 
 def main():
     while True:
@@ -9,20 +10,21 @@ def main():
         splitted_input = user_input.split(" ")
         command_input = splitted_input[0]
         args = splitted_input[1:]
-        if (command_input == "exit"):
-            break
         command = command_getter(command_input)
         if (command != None):
             command(args)
-            continue
         else:
             print(f"{command_input}: command not found")
+
+        if should_exit:
+            break
     pass
 
 def echo_command(args):
     for i in range (len(args) - 1):
         print(args[i] + " ", end="")
-    print(args[-1], end="")
+    if (len(args) > 0):
+        print(args[-1], end="")
     print("", end="\n")
 
 def type_command(args):
@@ -31,16 +33,36 @@ def type_command(args):
         return
     if (args[0] in BUILTIN_COMMANDS):
         print(f"{args[0]} is a shell builtin", end="\n")
+    elif is_installed_command(args[0]):
+        print(f"{args[0]} is {find_installed_command(args[0])}", end="\n")
     else:
         print(f"{args[0]}: not found", end="\n")
 
+def exit_command(args):
+    global should_exit
+    should_exit = True
+
+BUILTIN_COMMANDS = {
+    "echo": echo_command,
+    "type": type_command,
+    "exit": exit_command
+}
 
 def command_getter(command):
-    if (command == "echo"):
-        return echo_command
-    if (command == "type"):
-        return type_command
+    return BUILTIN_COMMANDS.get(command, None)
+
+def find_installed_command(command):
+    path = os.environ.get("PATH")
+    path_separator = os.pathsep 
+    directories = path.split(path_separator)
+    for directory in directories:
+        possible_path = os.path.join(directory, command)
+        if os.path.isfile(possible_path) and os.access(possible_path, os.X_OK):
+            return possible_path
     return None
+
+def is_installed_command(command):
+    return find_installed_command(command) is not None
 
 
 if __name__ == "__main__":
