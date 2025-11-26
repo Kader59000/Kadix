@@ -1,6 +1,6 @@
 import sys
 
-BUILTIN_COMMANDS = ["echo", "type"]
+BUILTIN_COMMANDS = ["echo", "type", "exit"]
 
 def main():
     while True:
