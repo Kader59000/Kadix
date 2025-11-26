@@ -121,7 +121,10 @@ def handle_input(args_str):
                 current_arg = ''
         else:
             current_arg += current_char
-    args.append(current_arg)
+    if do_concatenation:
+        args.append(args.pop() + current_arg)
+    else:
+        args.append(current_arg)
     return args
 
         
