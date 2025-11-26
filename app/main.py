@@ -117,7 +117,11 @@ def handle_input(args_str):
             current_arg = ''
         elif current_char == " " and not in_quotes:
             if current_arg:
-                args.append(current_arg)
+                if do_concatenation:
+                    args.append(args.pop() + current_arg)
+                    do_concatenation = False
+                else:
+                    args.append(current_arg)
                 current_arg = ''
         else:
             current_arg += current_char
