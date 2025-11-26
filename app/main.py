@@ -118,7 +118,7 @@ def handle_input(args_str):
                 current_arg = ''
         else:
             current_arg += current_char
-    args.append(current_arg, in_quotes)
+    args.append(current_arg)
     return args
 
         
