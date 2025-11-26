@@ -7,7 +7,7 @@ def main():
     while True:
         sys.stdout.write("$ ")
         user_input = input()
-        splitted_input = user_input.split(" ")
+        splitted_input = handle_input(user_input)
         command_input = splitted_input[0]
         args = splitted_input[1:]
         if (command_exists(command_input)):
@@ -91,6 +91,29 @@ def find_installed_command(command):
 
 def is_installed_command(command):
     return find_installed_command(command) is not None
+
+def handle_input(args_str):
+    args = []
+    current_arg = ''
+    in_quotes = False
+    for i in range(len(args_str)):
+        current_char = args_str[i]
+        if current_char == "'" and not in_quotes:
+            in_quotes = True
+        elif current_char == "'" and in_quotes:
+            in_quotes = False
+            args.append(current_arg)
+            current_arg = ''
+        elif current_char == " " and not in_quotes:
+            if current_arg:
+                args.append(current_arg)
+                current_arg = ''
+        else:
+            current_arg += current_char
+    args.append(current_arg)
+    return args
+
+        
 
 
 if __name__ == "__main__":
