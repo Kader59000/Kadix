@@ -32,7 +32,7 @@ def type_command(args):
     if (args[0] in BUILTIN_COMMANDS):
         print(f"{args[0]} is a shell builtin", end="\n")
     else:
-        print(f"{args[0]}: command not found", end="\n")
+        print(f"{args[0]}: not found", end="\n")
 
 
 def command_getter(command):
