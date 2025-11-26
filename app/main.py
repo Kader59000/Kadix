@@ -57,7 +57,8 @@ BUILTIN_COMMANDS = {
     "echo": echo_command,
     "type": type_command,
     "exit": exit_command,
-    "pwd": pwd_command
+    "pwd": pwd_command,
+    "cd": cd_command
 }
 
 def command_exists(command):
