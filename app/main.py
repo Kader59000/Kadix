@@ -48,8 +48,21 @@ BUILTIN_COMMANDS = {
     "exit": exit_command
 }
 
-def command_getter(command):
+def builtin_command_getter(command):
     return BUILTIN_COMMANDS.get(command, None)
+
+def execute_command(command, args):
+    builtin_command = builtin_command_getter(command)
+    if builtin_command:
+        builtin_command(args)
+        return
+    installed_command = find_installed_command(command)
+    if installed_command:
+        process = subprocess.Popen([command] + args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        stdout, stderr = process.communicate()
+        return
+    
+
 
 def find_installed_command(command):
     path = os.environ.get("PATH")
