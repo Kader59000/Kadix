@@ -102,7 +102,8 @@ def handle_input(args_str):
             in_quotes = True
         elif current_char == "'" and in_quotes:
             in_quotes = False
-            args.append(current_arg)
+            if current_arg != "'":
+                args.append(current_arg)
             current_arg = ''
         elif current_char == " " and not in_quotes:
             if current_arg:
