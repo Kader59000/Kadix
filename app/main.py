@@ -111,6 +111,9 @@ def handle_input(args_str):
                     do_concatenation = False
                 else:
                     args.append(current_arg)
+            else:
+                if i < len(args_str)-1 and args_str[i+1] != " ":
+                    do_concatenation = True
             current_arg = ''
         elif current_char == " " and not in_quotes:
             if current_arg:
