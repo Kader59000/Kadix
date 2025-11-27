@@ -82,7 +82,7 @@ def execute_command(command, args):
         if process.returncode != 0:
             print(stderr, end="", file=sys.stderr)
         else:
-            print(stdout, end="")
+            print(stdout, end="", file=sys.stdout)
         return
 
 def find_installed_command(command):
