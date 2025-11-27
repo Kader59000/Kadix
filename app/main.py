@@ -126,7 +126,7 @@ def check_redirection(args):
             if (len(parts) != 2):
                 print("Invalid redirection syntax.")
                 return False
-            file_descriptor = parts[0]
+            file_descriptor = parts[0] 
             if (file_descriptor == ''):
                 file_descriptor = "1"
             if i == len(args) - 1:
