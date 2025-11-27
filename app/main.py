@@ -101,7 +101,7 @@ def handle_input(args_str):
     return inp
 
 def redirect(file_descriptor, output_file):
-    if file_descriptor != 1 and file_descriptor != 2:
+    if file_descriptor != "1" and file_descriptor != "2":
         print(f"Redirection of file descriptor {file_descriptor} is not supported.")
         return False
     if not output_file:
