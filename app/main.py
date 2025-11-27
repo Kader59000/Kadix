@@ -78,10 +78,8 @@ def execute_command(command, args):
     if installed_command:
         process = subprocess.Popen([command] + args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
-        if process.returncode != 0:
-            print(stderr, end="", file=sys.stderr)
-        else:
-            print(stdout, end="", file=sys.stdout)
+        print(stderr, end="", file=sys.stderr)
+        print(stdout, end="", file=sys.stdout)
         return
 
 def find_installed_command(command):
