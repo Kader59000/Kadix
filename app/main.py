@@ -107,9 +107,9 @@ def redirect(file_descriptor, output_file):
     if not output_file:
         print("No output file specified for redirection.")
         return False
-    if file_descriptor == 1:
+    if file_descriptor == "1":
         sys.stdout = open(output_file, "w")
-    elif file_descriptor == 2:
+    elif file_descriptor == "2":
         sys.stderr = open(output_file, "w")
     return True
 
