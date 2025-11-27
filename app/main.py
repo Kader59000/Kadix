@@ -121,6 +121,8 @@ def check_redirection(args):
     for i in range(len(args)):
         if '>' in args[i]:
             isAppend = '>>' in args[i]
+            if isAppend:
+                parts = args[i].split('>>')
             parts = args[i].split('>')
             if (len(parts) != 2):
                 print("Invalid redirection syntax.")
