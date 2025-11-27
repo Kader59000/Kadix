@@ -1,4 +1,2 @@
-> test.txt
-$ No output file specified for redirection.
-test >
+caca > test.txt
 $ 

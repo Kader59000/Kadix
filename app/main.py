@@ -6,6 +6,7 @@ should_exit = False
 
 def main():
     while True:
+        reset_redirection()
         sys.stdout.write("$ ")
         user_input = input()
         splitted_input = handle_input(user_input)
