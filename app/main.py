@@ -132,12 +132,10 @@ def check_redirection(args):
                 return False
             output_file = args[i + 1]
             redirect(file_descriptor, output_file)
+            # Modifie args en place pour retirer la redirection
+            del args[i:]
             return True
     return False
-            
-        
-        
-
 
 if __name__ == "__main__":
     main()

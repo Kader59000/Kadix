@@ -1,2 +1,1 @@
-caca > test.txt
-$ 
+caca le test
