@@ -79,10 +79,12 @@ def execute_command(command, args):
     if installed_command:
         process = subprocess.Popen([command] + args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
-        print (stdout, end="")
+        if stdout:
+            print(stdout)
+        if stderr:
+            print(stderr, end="", file=sys.stderr)
         return
 
-    
 def find_installed_command(command):
     path = os.environ.get("PATH")
     path_separator = os.pathsep 
