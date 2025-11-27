@@ -112,6 +112,10 @@ def redirect(file_descriptor, output_file):
         sys.stderr = open(output_file, "w")
     return True
 
+def reset_redirection():
+    sys.stdout = sys.__stdout__
+    sys.stderr = sys.__stderr__
+
 def check_redirection(args):
     for i in range(len(args)):
         if '>' in args[i]:
