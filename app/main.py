@@ -99,17 +99,18 @@ def handle_input(args_str):
     inp = shlex.split(args_str)
     return inp
 
-def redirect(file_descriptor, output_file):
+def redirect(file_descriptor, output_file, isAppend=False):
     if file_descriptor != "1" and file_descriptor != "2":
         print(f"Redirection of file descriptor {file_descriptor} is not supported.")
         return False
     if not output_file:
         print("No output file specified for redirection.")
         return False
+    openMode = "a" if isAppend else "w"
     if file_descriptor == "1":
-        sys.stdout = open(output_file, "w")
+        sys.stdout = open(output_file, openMode)
     elif file_descriptor == "2":
-        sys.stderr = open(output_file, "w")
+        sys.stderr = open(output_file, openMode)
     return True
 
 def reset_redirection():
@@ -119,6 +120,7 @@ def reset_redirection():
 def check_redirection(args):
     for i in range(len(args)):
         if '>' in args[i]:
+            isAppend = '>>' in args[i]
             parts = args[i].split('>')
             if (len(parts) != 2):
                 print("Invalid redirection syntax.")
@@ -130,7 +132,7 @@ def check_redirection(args):
                 print("No output file specified for redirection.")
                 return False
             output_file = args[i + 1]
-            redirect(file_descriptor, output_file)
+            redirect(file_descriptor, output_file, isAppend)
             # Modifie args en place pour retirer la redirection
             del args[i:]
             return True
