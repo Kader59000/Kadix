@@ -103,6 +103,9 @@ def redirect(file_descriptor, output_file):
     if file_descriptor != 1 and file_descriptor != 2:
         print(f"Redirection of file descriptor {file_descriptor} is not supported.")
         return False
+    if not output_file:
+        print("No output file specified for redirection.")
+        return False
     if file_descriptor == 1:
         sys.stdout = open(output_file, "w")
     elif file_descriptor == 2:
@@ -119,7 +122,10 @@ def check_redirection(args):
             file_descriptor = parts[0]
             if (file_descriptor == ''):
                 file_descriptor = 1
-            output_file = parts[1]
+            if i == len(args) - 1:
+                print("No output file specified for redirection.")
+                return False
+            output_file = args[i + 1]
             redirect(file_descriptor, output_file)
             return True
     return False
