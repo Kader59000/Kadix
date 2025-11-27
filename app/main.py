@@ -69,6 +69,7 @@ def builtin_command_getter(command):
     return BUILTIN_COMMANDS.get(command, None)
 
 def execute_command(command, args):
+    check_redirection(args)
     builtin_command = builtin_command_getter(command)
     if builtin_command:
         builtin_command(args)
@@ -79,6 +80,7 @@ def execute_command(command, args):
         stdout, stderr = process.communicate()
         print (stdout, end="")
         return
+
     
 def find_installed_command(command):
     path = os.environ.get("PATH")
@@ -94,7 +96,35 @@ def is_installed_command(command):
     return find_installed_command(command) is not None
 
 def handle_input(args_str):
-    return shlex.split(args_str)
+    inp = shlex.split(args_str)
+    return inp
+
+def redirect(file_descriptor, output_file):
+    if file_descriptor != 1 and file_descriptor != 2:
+        print(f"Redirection of file descriptor {file_descriptor} is not supported.")
+        return False
+    if file_descriptor == 1:
+        sys.stdout = open(output_file, "w")
+    elif file_descriptor == 2:
+        sys.stderr = open(output_file, "w")
+    return True
+
+def check_redirection(args):
+    for i in range(len(args)):
+        if '>' in args[i]:
+            parts = args[i].split('>')
+            if (len(parts) != 2):
+                print("Invalid redirection syntax.")
+                return False
+            file_descriptor = parts[0]
+            if (file_descriptor == ''):
+                file_descriptor = 1
+            output_file = parts[1]
+            redirect(file_descriptor, output_file)
+            return True
+    return False
+            
+        
         
 
 
