@@ -35,7 +35,8 @@ class InstalledCommand(Command):
         self.args = args
 
     def execute(self):
-        process = subprocess.Popen([self.path] + list(self.args), stdout=sys.stdout, stdin=sys.stdin, stderr=sys.stderr)
+        program_name = self.name  # juste le nom, pas le chemin complet
+        process = subprocess.Popen([program_name] + list(self.args), executable=self.path, stdout=sys.stdout, stdin=sys.stdin, stderr=sys.stderr)
         process.wait()
         return None
 
