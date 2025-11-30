@@ -1,7 +1,7 @@
 import sys
 import shlex
 from app.commands.command import Command, CommandNotFoundException
-from operators.redirection_operator import RedirectionOperator, AppendOperator
+from app.operators.redirection_operator import RedirectionOperator, AppendOperator
 
 should_exit = False
 
