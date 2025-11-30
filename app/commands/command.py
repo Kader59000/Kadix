@@ -58,7 +58,7 @@ class BuiltinCommand(Command):
     """
     Commande interne au shell.
     """
-    from builtincommands.builtin_commands import echo_command, type_command, exit_command, pwd_command, cd_command
+    from app.builtincommands.builtin_commands import echo_command, type_command, exit_command, pwd_command, cd_command
     BUILTIN_COMMANDS = {
                 "echo": echo_command,
                 "type": type_command,
