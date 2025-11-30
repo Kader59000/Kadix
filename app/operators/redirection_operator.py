@@ -19,6 +19,8 @@ class RedirectionOperator(Operator):
                 sys.stdout = f
             elif self.file_descriptor == "2":
                 sys.stderr = f
+            else:
+                print(f"Invalid file descriptor: {self.file_descriptor}")
             self.command.execute()
         # Restaure les flux standard
         sys.stdout = sys.__stdout__
