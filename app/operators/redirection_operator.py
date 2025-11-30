@@ -32,7 +32,7 @@ class AppendOperator(Operator):
     Le constructeur prend en paramètre la commande et le fichier cible.
     """
     def __init__(self, token, command, target_file):
-        super().__init__(token, symbol_pattern=r">>|1>>")
+        super().__init__(token, symbol_pattern=r">>|1>>|2>>")
         self.command = command
         self.file_descriptor = token[:-2] if token != ">>" else "1"
         self.target_file = target_file
