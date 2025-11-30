@@ -1,7 +1,7 @@
 import sys
 import shlex
 from commands.command import Command, CommandNotFoundException
-from operators.redirection_operator import RedirectionOperator
+from operators.redirection_operator import RedirectionOperator, AppendOperator
 
 should_exit = False
 
@@ -10,8 +10,8 @@ def main():
         sys.stdout.write("$ ")
         user_input = input()
         splitted_input = handle_input(user_input)
-        # Recherche d'un opérateur de redirection
-        op_indices = [i for i, token in enumerate(splitted_input) if token in ['>', '1>', '2>']]
+        # Recherche d'un opérateur de redirection ou d'append
+        op_indices = [i for i, token in enumerate(splitted_input) if token in ['>', '1>', '2>', '>>', '1>>']]
         if op_indices:
             i = op_indices[0]
             operator_token = splitted_input[i]
@@ -20,7 +20,10 @@ def main():
             output_file = splitted_input[i+1] if i+1 < len(splitted_input) else None
             if output_file:
                 cmd = Command.getCommand(command, args)
-                operator = RedirectionOperator(operator_token, command=cmd, target_file=output_file)
+                if operator_token in ['>>', '1>>']:
+                    operator = AppendOperator(operator_token, command=cmd, target_file=output_file)
+                else:
+                    operator = RedirectionOperator(operator_token, command=cmd, target_file=output_file)
                 operator.execute()
             else:
                 print("No output file specified for redirection.")
