@@ -33,7 +33,7 @@ class InstalledCommand(Command):
         self.name = name
         self.path = path
         self.args = args
-
+ 
     def execute(self):
         program_name = self.name  # juste le nom, pas le chemin complet
         process = subprocess.Popen([program_name] + list(self.args), executable=self.path, stdout=sys.stdout, stdin=sys.stdin, stderr=sys.stderr)
