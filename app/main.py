@@ -11,7 +11,7 @@ def main():
         user_input = input()
         splitted_input = handle_input(user_input)
         # Recherche d'un opérateur de redirection ou d'append
-        op_indices = [i for i, token in enumerate(splitted_input) if token in ['>', '1>', '2>', '>>', '1>>']]
+        op_indices = [i for i, token in enumerate(splitted_input) if token in ['>', '1>', '2>', '>>', '1>>', '2>>']]
         if op_indices:
             i = op_indices[0]
             operator_token = splitted_input[i]
