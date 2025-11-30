@@ -19,8 +19,7 @@ class RedirectionOperator(Operator):
                 sys.stdout = f
             elif self.file_descriptor == "2":
                 sys.stderr = f
-            process = sys.modules["subprocess"].Popen(self.command)
-            process.communicate()
+            command.execute()
         # Restaure les flux standard
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__

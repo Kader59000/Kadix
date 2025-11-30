@@ -9,18 +9,18 @@ class Command(ABC):
     Classe abstraite pour une commande shell.
     """
     @abstractmethod
-    def execute(self, *args, **kwargs):
+    def execute(self):
         pass
 
     @staticmethod
-    def getCommand(command):
+    def getCommand(command, args):
         # Import des commandes internes
-        if command in  BuiltinCommand.BUILTIN_COMMANDS:
-            return BuiltinCommand(command)
+        if command in BuiltinCommand.BUILTIN_COMMANDS:
+            return BuiltinCommand(command, args)
         # Recherche de la commande installée
         path = InstalledCommand.find_installed_command(command)
         if path:
-            return InstalledCommand(command, path)
+            return InstalledCommand(command, path, args)
         raise CommandNotFoundException(f"{command}: command not found")
 
 
@@ -28,13 +28,14 @@ class InstalledCommand(Command):
     """
     Commande installée sur le système.
     """
-    def __init__(self, name, path):
+    def __init__(self, name, path, args):
         self.name = name
         self.path = path
-    def execute(self, *args, **kwargs):
-        process = subprocess.Popen([self.path] + list(args), stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        stdout, stderr = process.communicate()
-        return stdout, stderr
+        self.args = args
+    def execute(self):
+        process = subprocess.Popen([self.path] + list(self.args))
+        process.wait()
+        return None
 
     @staticmethod
     def find_installed_command(command):
@@ -64,9 +65,10 @@ class BuiltinCommand(Command):
                 "cd": cd_command
             }
 
-    def __init__(self, name):
+    def __init__(self, name, args):
         self.name = name
-    def execute(self, args):
+        self.args = args
+    def execute(self):
         if self.name in BuiltinCommand.BUILTIN_COMMANDS:
-            return BuiltinCommand.BUILTIN_COMMANDS[self.name](args)
+            return BuiltinCommand.BUILTIN_COMMANDS[self.name](self.args)
         raise CommandNotFoundException(f"{self.name}: builtin command not found")
