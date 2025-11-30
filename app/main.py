@@ -10,20 +10,20 @@ def main():
         sys.stdout.write("$ ")
         user_input = input()
         splitted_input = handle_input(user_input)
-        # Vérifie la présence d'un opérateur de redirection
-        if any(op in splitted_input for op in ['>', '1>', '2>']):
-            # Recherche l'opérateur et ses paramètres
-            for i, token in enumerate(splitted_input):
-                if token in ['>', '1>', '2>']:
-                    command = splitted_input[0]
-                    args = splitted_input[1:i]
-                    output_file = splitted_input[i+1] if i+1 < len(splitted_input) else None
-                    if output_file:
-                        operator = RedirectionOperator(command=[command]+args, target_file=output_file)
-                        operator.execute()
-                    else:
-                        print("No output file specified for redirection.")
-                    break
+        # Recherche d'un opérateur de redirection
+        op_indices = [i for i, token in enumerate(splitted_input) if token in ['>', '1>', '2>']]
+        if op_indices:
+            i = op_indices[0]
+            operator_token = splitted_input[i]
+            command = splitted_input[0]
+            args = splitted_input[1:i]
+            output_file = splitted_input[i+1] if i+1 < len(splitted_input) else None
+            if output_file:
+                cmd = Command.getCommand(command, args)
+                operator = RedirectionOperator(operator_token, command=cmd, target_file=output_file)
+                operator.execute()
+            else:
+                print("No output file specified for redirection.")
         else:
             command_input = splitted_input[0]
             args = splitted_input[1:]

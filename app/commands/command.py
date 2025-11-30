@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import subprocess
+import sys
 
 class CommandNotFoundException(Exception):
     pass
@@ -32,8 +33,9 @@ class InstalledCommand(Command):
         self.name = name
         self.path = path
         self.args = args
+
     def execute(self):
-        process = subprocess.Popen([self.path] + list(self.args))
+        process = subprocess.Popen([self.path] + list(self.args), stdout=sys.stdout, stdin=sys.stdin)
         process.wait()
         return None
 

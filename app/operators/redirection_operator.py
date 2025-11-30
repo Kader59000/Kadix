@@ -9,7 +9,7 @@ class RedirectionOperator(Operator):
     def __init__(self, token, command, target_file):
         super().__init__(token, symbol_pattern=r">|1>|2>")
         self.command = command
-        self.file_descriptor = symbol[:-1] if symbol != ">" else "1"
+        self.file_descriptor = token[:-1] if token != ">" else "1"
         self.target_file = target_file
 
     def execute(self):
@@ -19,7 +19,7 @@ class RedirectionOperator(Operator):
                 sys.stdout = f
             elif self.file_descriptor == "2":
                 sys.stderr = f
-            command.execute()
+            self.command.execute()
         # Restaure les flux standard
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
