@@ -1,1 +1,6 @@
 ls: zebi: No such file or directory
+__pycache__
+builtincommands
+commands
+main.py
+operators

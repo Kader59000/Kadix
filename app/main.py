@@ -20,7 +20,7 @@ def main():
             output_file = splitted_input[i+1] if i+1 < len(splitted_input) else None
             if output_file:
                 cmd = Command.getCommand(command, args)
-                if operator_token in ['>>', '1>>']:
+                if operator_token in ['>>', '1>>', '2>>']:
                     operator = AppendOperator(operator_token, command=cmd, target_file=output_file)
                 else:
                     operator = RedirectionOperator(operator_token, command=cmd, target_file=output_file)
