@@ -7,7 +7,7 @@ def type_command(args):
     if len(args) != 1:
         print("type: invalid number of arguments")
         return
-    from commands.command import BuiltinCommand, InstalledCommand
+    from app.commands.command import BuiltinCommand, InstalledCommand
     name = args[0]
     if name in BuiltinCommand.BUILTIN_COMMANDS:
         print(f"{name} is a shell builtin")
