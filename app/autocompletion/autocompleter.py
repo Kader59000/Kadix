@@ -20,7 +20,7 @@ class AutoCompleter:
                 # Premier Tab : ring the bell et ne rien compléter
                 print('\x07', end='', flush=True)
                 return None
-            elif state == 1:
+            else:
                 # Deuxième Tab : affiche toutes les suggestions séparées par des espaces
                 return '  '.join(matches)
         if state < len(matches):
