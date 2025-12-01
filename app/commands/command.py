@@ -39,10 +39,17 @@ class InstalledCommand(Command):
         process = subprocess.Popen([program_name] + list(self.args), executable=self.path, stdout=sys.stdout, stdin=sys.stdin, stderr=sys.stderr)
         process.wait()
         return None
-
+    
     @staticmethod
     def is_installed_command(self):
         return PathCommandLocator.find_command_path(self.name) is not None
+
+    @staticmethod
+    def find_installed_command(command):
+        """
+        Recherche le chemin d'une commande installée en utilisant PathCommandLocator.
+        """
+        return PathCommandLocator.find_command_path(command)
 
 
 class PathCommandLocator:
