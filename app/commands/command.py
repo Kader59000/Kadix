@@ -19,7 +19,7 @@ class Command(ABC):
         if command in BuiltinCommand.BUILTIN_COMMANDS:
             return BuiltinCommand(command, args)
         # Recherche de la commande installée
-        path = InstalledCommand.find_installed_command(command)
+        path = PathCommandLocator.find_command_path(command)
         if path:
             return InstalledCommand(command, path, args)
         raise CommandNotFoundException(f"{command}: command not found")
@@ -41,7 +41,16 @@ class InstalledCommand(Command):
         return None
 
     @staticmethod
-    def find_installed_command(command):
+    def is_installed_command(self):
+        return PathCommandLocator.find_command_path(self.name) is not None
+
+
+class PathCommandLocator:
+    """
+    Classe utilitaire pour rechercher et lister les commandes disponibles dans le PATH.
+    """
+    @staticmethod
+    def find_command_path(command):
         import os
         path = os.environ.get("PATH")
         path_separator = os.pathsep
@@ -51,9 +60,22 @@ class InstalledCommand(Command):
             if os.path.isfile(possible_path) and os.access(possible_path, os.X_OK):
                 return possible_path
         return None
+
     @staticmethod
-    def is_installed_command(self):
-        return InstalledCommand.find_installed_command(self.name) is not None
+    def list_all_commands():
+        import os
+        path = os.environ.get("PATH")
+        path_separator = os.pathsep
+        directories = path.split(path_separator)
+        commands = set()
+        for directory in directories:
+            if os.path.isdir(directory):
+                for filename in os.listdir(directory):
+                    file_path = os.path.join(directory, filename)
+                    if os.path.isfile(file_path) and os.access(file_path, os.X_OK):
+                        commands.add(file_path)
+        return sorted(commands)
+
 
 class BuiltinCommand(Command):
     """
