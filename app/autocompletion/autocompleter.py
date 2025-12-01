@@ -27,7 +27,7 @@ class AutoCompleter:
                 return None
         if state < len(matches):
             return matches[state] + " "
-        return None
+        return 'caca'
 
     def start(self):
         # Configure readline pour utiliser la complétion sur Tab
