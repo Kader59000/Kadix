@@ -27,6 +27,7 @@ class AutoCompleter:
                 readline.clear_history()
                 res = '  '.join(matches)
                 print(res)
+                print('$ '  + buf)
                 return res
         if state < len(matches):
             return matches[state] + " "
