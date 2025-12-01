@@ -5,7 +5,6 @@ class AutoCompleter:
     """
     Classe pour gérer l'autocomplétion des commandes internes et installées du shell.
     """
-    last_completed_command = ""
 
     def __init__(self):
         # Récupère la liste des commandes internes
@@ -20,7 +19,7 @@ class AutoCompleter:
         if len(matches) > 1:
             if state == 0:
                 return '\x07'  # Émet le bip (bell) sur le premier Tab si aucune suggestion
-            if state == 1:
+            else:
                 return ' '.join(matches)
         if state < len(matches):
             return matches[state] + " "  # Ajoute un espace après la commande complétée
