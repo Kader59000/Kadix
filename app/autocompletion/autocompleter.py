@@ -21,8 +21,8 @@ class AutoCompleter:
                 print('\x07', end='', flush=True)
                 return None
             else:
-                # Deuxième Tab : affiche toutes les suggestions séparées par des espaces
-                print('  '.join(matches), end='\n$ ', flush=True)
+                # Deuxième Tab : affiche uniquement la ligne des suggestions
+                print('  '.join(matches), flush=True)
                 return None
         if state < len(matches):
             return matches[state] + " "
