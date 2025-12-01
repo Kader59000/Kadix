@@ -16,7 +16,6 @@ class AutoCompleter:
     def completer(self, text, state):
         # Filtre les commandes qui commencent par le texte saisi
         matches = [cmd for cmd in self.commands if cmd.startswith(text)]
-        print(f"Completer called with text='{text}', state={state}, matches={matches}")
         if len(matches) > 1:
             if state == 0:
                 return '\x07'
