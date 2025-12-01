@@ -1,4 +1,4 @@
-import readline
+import gnureadline as readline
 from app.commands.command import BuiltinCommand, PathCommandLocator
 import sys
 class AutoCompleter:
