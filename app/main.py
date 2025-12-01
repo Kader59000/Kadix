@@ -2,10 +2,13 @@ import sys
 import shlex
 from app.commands.command import Command, CommandNotFoundException
 from app.operators.redirection_operator import RedirectionOperator, AppendOperator
+from app.autocompletion.autocompleter import AutoCompleter
 
 should_exit = False
 
 def main():
+    # Active l'autocomplétion sur les commandes internes
+    AutoCompleter().start()
     while True:
         sys.stdout.write("$ ")
         user_input = input()
