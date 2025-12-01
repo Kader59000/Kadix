@@ -13,10 +13,10 @@ class AutoCompleter:
         # Filtre les commandes qui commencent par le texte saisi
         matches = [cmd for cmd in self.commands if cmd.startswith(text)]
         if state < len(matches):
-            return matches[state]
+            return matches[state] + " "  # Ajoute un espace après la commande complétée
         return None
 
     def start(self):
         # Configure readline pour utiliser la complétion sur Tab
         readline.set_completer(self.completer)
-        readline.parse_and_bind("tab: complete")  
+        readline.parse_and_bind("tab: complete")
