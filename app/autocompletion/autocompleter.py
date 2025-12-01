@@ -22,7 +22,9 @@ class AutoCompleter:
                 return '\x07'
             else:
                 # Deuxième Tab : affiche uniquement la ligne des suggestions
-                sys.stdout.write(text)
+                buf = readline.get_line_buffer()
+                print(buf)
+                readline.clear_history()
                 res = '  '.join(matches)
                 print(res)
                 return res
