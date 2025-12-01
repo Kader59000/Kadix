@@ -22,8 +22,8 @@ class AutoCompleter:
                 return None
             else:
                 # Deuxième Tab : affiche toutes les suggestions séparées par des espaces
-                print('  '.join(matches))
-                return '  '.join(matches)
+                print('  '.join(matches), end='\n$ ', flush=True)
+                return None
         if state < len(matches):
             return matches[state] + " "
         return None
