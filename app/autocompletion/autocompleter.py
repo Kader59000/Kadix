@@ -23,7 +23,7 @@ class AutoCompleter:
             else:
                 # Deuxième Tab : affiche uniquement la ligne des suggestions
                 buf = readline.get_line_buffer()
-                print(buf)
+                print('$ '  + buf)
                 readline.clear_history()
                 res = '  '.join(matches)
                 print(res)
