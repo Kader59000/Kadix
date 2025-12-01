@@ -1,6 +1,6 @@
 import readline
 from app.commands.command import BuiltinCommand, PathCommandLocator
-
+import sys
 class AutoCompleter:
     """
     Classe pour gérer l'autocomplétion des commandes internes et installées du shell.
@@ -22,7 +22,7 @@ class AutoCompleter:
                 return '\x07'
             else:
                 # Deuxième Tab : affiche uniquement la ligne des suggestions
-                print('$ ' + text)
+                sys.stdout.write("$ ") + text
                 res = '  '.join(matches)
                 print(res)
                 return res
