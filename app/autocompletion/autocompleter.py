@@ -21,6 +21,7 @@ class AutoCompleter:
                 print('\x07', end='', flush=True)
                 return None
             else:
+                print(f"Completer called with text='{text}' and state={state}")  # Debug statement
                 # Deuxième Tab : affiche uniquement la ligne des suggestions
                 print('  '.join(matches), flush=True)
                 return None
