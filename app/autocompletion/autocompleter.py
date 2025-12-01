@@ -13,9 +13,7 @@ class AutoCompleter:
         # Filtre les commandes qui commencent par le texte saisi
         matches = [cmd for cmd in self.commands if cmd.startswith(text)]
         if state < len(matches):
-            print(f"Completer match for state {state} and text '{text}': {matches[state]}")
             return matches[state]
-        print(f"No match for state {state} and text '{text}'")
         return None
 
     def start(self):
