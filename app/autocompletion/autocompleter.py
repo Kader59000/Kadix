@@ -23,7 +23,7 @@ class AutoCompleter:
             else:
                 print(f"Completer called with text='{text}' and state={state}")  # Debug statement
                 # Deuxième Tab : affiche uniquement la ligne des suggestions
-                print('  '.join(matches), flush=True)
+                print('  '.join(matches), end='', flush=True)
                 return None
         if state < len(matches):
             return matches[state] + " "
