@@ -23,8 +23,7 @@ class AutoCompleter:
             else:
                 # Deuxième Tab : affiche uniquement la ligne des suggestions
                 res = '  '.join(matches)
-                print(res)
-                return None
+                return res
         if state < len(matches):
             return matches[state] + " "
 
