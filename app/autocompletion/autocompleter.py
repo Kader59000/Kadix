@@ -21,4 +21,4 @@ class AutoCompleter:
     def start(self):
         # Configure readline pour utiliser la complétion sur Tab
         readline.set_completer(self.completer)
-        readline.parse_and_bind("tab: complete")
+        readline.parse_and_bind("tab: complete")  
