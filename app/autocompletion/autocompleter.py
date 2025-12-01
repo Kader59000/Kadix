@@ -16,7 +16,7 @@ class AutoCompleter:
     def completer(self, text, state):
         matches = [cmd for cmd in self.commands if cmd.startswith(text)]
         if len(matches) > 1:
-            if state == 0:
+            if state == 0: 
                 # Premier Tab : ring the bell et ne rien compléter
                 print('\x07', end='', flush=True)
                 return None
