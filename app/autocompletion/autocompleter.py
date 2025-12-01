@@ -14,15 +14,17 @@ class AutoCompleter:
         self.commands = sorted(set(self.builtin_commands + self.installed_commands))
 
     def completer(self, text, state):
-        # Filtre les commandes qui commencent par le texte saisi
         matches = [cmd for cmd in self.commands if cmd.startswith(text)]
         if len(matches) > 1:
             if state == 0:
-                return '\x07'
-            else:
-                return ' '.join(matches)
+                # Premier Tab : ring the bell et ne rien compléter
+                print('\x07', end='', flush=True)
+                return None
+            elif state == 1:
+                # Deuxième Tab : affiche toutes les suggestions séparées par des espaces
+                return '  '.join(matches)
         if state < len(matches):
-            return matches[state] + " "  # Ajoute un espace après la commande complétée
+            return matches[state] + " "
         return None
 
     def start(self):
