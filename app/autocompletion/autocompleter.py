@@ -19,7 +19,7 @@ class AutoCompleter:
             if state == 0: 
                 # Premier Tab : ring the bell et ne rien compléter
                 print('\x07', end='', flush=True)
-                return None
+                return '\x07'
             else:
                 # Deuxième Tab : affiche uniquement la ligne des suggestions
                 res = '  '.join(matches)
