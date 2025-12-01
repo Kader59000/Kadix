@@ -18,11 +18,13 @@ class AutoCompleter:
         if len(matches) > 1:
             if state == 0: 
                 # Premier Tab : ring the bell et ne rien compléter
-                return '\x07'
+                print('\x07', flush=True)
+                return None
             else:
                 # Deuxième Tab : affiche uniquement la ligne des suggestions
                 res = '  '.join(matches)
-                return res
+                print(res)
+                return None
         if state < len(matches):
             return matches[state] + " "
 
