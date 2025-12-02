@@ -12,6 +12,7 @@ class AutoCompleter:
         # Récupère la liste des commandes installées (noms uniquement)
         self.installed_commands = [cmd.split("/")[-1] for cmd in PathCommandLocator.list_all_commands()]
         self.commands = sorted(set(self.builtin_commands + self.installed_commands))
+        last_processed_input = ""
 
     def completer_v1(self, text, state):
         matches = [cmd for cmd in self.commands if cmd.startswith(text)]
@@ -34,9 +35,11 @@ class AutoCompleter:
 
     def completer(self, text, state):
         matches = [cmd[len(text):] for cmd in self.commands if cmd.startswith(text)]
+        last_processed_input = self.last_processed_input
+        self.last_processed_input = text
         if state > 1:
             return None
-        if state == 0:
+        if state == 0 and not(last_processed_input.startswith(text)):
             print('\x07', end='', flush=True)
             return '\x07'
         if len(matches) == 1:
