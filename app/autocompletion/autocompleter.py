@@ -41,9 +41,12 @@ class AutoCompleter:
                 print('\x07', end='', flush=True)
             return None
         if len(matches) == 1:
-            # Complète seulement le suffixe manquant
-            suffix = matches[0][len(text):]
-            return suffix + " " if suffix else None
+            match = matches[0]
+            if text != match:
+                # Complète le suffixe manquant
+                suffix = match[len(text):]
+                return suffix + " " if suffix else None
+            return None
         # Plusieurs matches, complète le LCP des suffixes
         suffixes = [cmd[len(text):] for cmd in matches]
         lcp = AutoCompleter.longest_common_prefix(suffixes)
