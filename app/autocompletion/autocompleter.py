@@ -44,7 +44,7 @@ class AutoCompleter:
         if len(matches) == 0:
             return None
         longest_prefix = AutoCompleter.longest_common_prefix(matches)
-        print(longest_prefix)
+        print(longest_prefix, end='', flush=True)
         return longest_prefix
 
     
