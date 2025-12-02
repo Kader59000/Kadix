@@ -45,7 +45,11 @@ class AutoCompleter:
             if text != match:
                 # Complète le suffixe manquant
                 suffix = match[len(text):]
-                return suffix + " " if suffix else None
+                # Remplace le buffer d'édition par le match complet
+                import readline
+                readline.insert_text(suffix + " ")
+                readline.redisplay()
+                return None
             return None
         # Plusieurs matches, complète le LCP des suffixes
         suffixes = [cmd[len(text):] for cmd in matches]
@@ -55,7 +59,11 @@ class AutoCompleter:
             if state == 0:
                 print('\x07', end='', flush=True)
             return None
-        return lcp
+        # Insère le LCP dans le buffer d'édition
+        import readline
+        readline.insert_text(lcp)
+        readline.redisplay()
+        return None
 
     
     @staticmethod
