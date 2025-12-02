@@ -42,7 +42,7 @@ class AutoCompleter:
             return None
         if len(matches) == 1:
             # Un seul match, complète entièrement
-            return matches[0][len(text):] + " "
+            return matches[0] + " "
         # Plusieurs matches, complète le LCP des suffixes
         suffixes = [cmd[len(text):] for cmd in matches]
         lcp = AutoCompleter.longest_common_prefix(suffixes)
