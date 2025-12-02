@@ -35,8 +35,8 @@ class AutoCompleter:
 
     def completer(self, text, state):
         matches = [cmd[len(text):] for cmd in self.commands if cmd.startswith(text)]
-        last_processed_input = self.last_processed_input
-        self.last_processed_input = text
+        last_processed_input = AutoCompleter.last_processed_input
+        AutoCompleter.last_processed_input = text
         if state > 1:
             return None
         if state == 0 and not(last_processed_input.startswith(text)):
