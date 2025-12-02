@@ -34,22 +34,24 @@ class AutoCompleter:
             return matches[state] + " "
         
     def completer(self, text, state):
-        matches = [cmd[len(text):] for cmd in self.commands if cmd.startswith(text)]
-        last_processed_input = AutoCompleter.last_processed_input
-        AutoCompleter.last_processed_input = text
-        if state > 1:
+        matches = [cmd for cmd in self.commands if cmd.startswith(text)]
+        if not matches:
+            # Aucun match, ring the bell
+            if state == 0:
+                print('\x07', end='', flush=True)
             return None
-        if state == 0 and not(last_processed_input.startswith(text)):
-            print('\x07', end='', flush=True)
-            return '\x07'
         if len(matches) == 1:
-            return matches[0] + " "
-        if len(matches) == 0:
+            # Un seul match, complète entièrement
+            return matches[0][len(text):] + " "
+        # Plusieurs matches, complète le LCP des suffixes
+        suffixes = [cmd[len(text):] for cmd in matches]
+        lcp = AutoCompleter.longest_common_prefix(suffixes)
+        if not lcp:
+            # Plusieurs matches mais pas d'avancée possible, ring the bell
+            if state == 0:
+                print('\x07', end='', flush=True)
             return None
-        longest_prefix = AutoCompleter.longest_common_prefix(matches)
-        print('longest prefix:', longest_prefix)
-        print(longest_prefix, end='')
-        return longest_prefix
+        return lcp
 
     
     @staticmethod
