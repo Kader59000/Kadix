@@ -44,6 +44,8 @@ class AutoCompleter:
         if len(matches) == 0:
             return None
         longest_prefix = AutoCompleter.longest_common_prefix(matches)
+        buf = readline.clear_history()
+        print('$ '  + text + longest_prefix)
         return text + longest_prefix
 
     
