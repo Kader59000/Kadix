@@ -35,6 +35,8 @@ class AutoCompleter:
         
     def completer(self, text, state):
         matches = [cmd for cmd in self.commands if cmd.startswith(text)]
+        if state > 1: # On ne gère que le premier Tab
+            return None
         if not matches:
             # Aucun match, ring the bell
             if state == 0:
