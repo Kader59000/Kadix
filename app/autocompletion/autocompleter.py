@@ -51,6 +51,7 @@ class AutoCompleter:
             if state == 0:
                 print('\x07', end='', flush=True)
             return None
+        readline.clear_history()
         print('$ ' + text + lcp)
         return '$ ' + text + lcp
 
