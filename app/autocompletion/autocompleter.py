@@ -33,7 +33,7 @@ class AutoCompleter:
             return matches[state] + " "
 
     def completer(self, text, state):
-        matches = [cmd for cmd in self.commands if cmd.startswith(text)]
+        matches = [cmd[len(text):] for cmd in self.commands if cmd.startswith(text)]
         if state > 1:
             return None
         if state == 0:
@@ -44,7 +44,8 @@ class AutoCompleter:
         if len(matches) == 0:
             return None
         longest_prefix = AutoCompleter.longest_common_prefix(matches)
-        return longest_prefix
+        print(longest_prefix)
+        return text + longest_prefix
 
     
     @staticmethod
