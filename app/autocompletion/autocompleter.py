@@ -44,7 +44,7 @@ class AutoCompleter:
         if len(matches) == 0:
             return None
         longest_prefix = AutoCompleter.longest_common_prefix(matches)
-        print(longest_prefix)
+        print( 'longest: ' +   longest_prefix)
         return text + longest_prefix
 
     
@@ -58,7 +58,7 @@ class AutoCompleter:
             char = reference[i]
             all_contain_prefix = True
             for chaine in strs:
-                if chaine[i] != char:
+                if len(chaine) <= i or chaine[i] != char:
                     all_contain_prefix = False
                     break
             if all_contain_prefix:
