@@ -47,8 +47,8 @@ class AutoCompleter:
             if text != match:
                 # Complète le suffixe manquant
                 suffix = match[len(text):]
-                print(suffix + ' ', end='', flush=True)
-                return suffix + " " if suffix else None
+                print( text + suffix + ' ', end='', flush=True)
+                return text + suffix + " " if suffix else None
             return None
         # Plusieurs matches, complète le LCP des suffixes
         suffixes = [cmd[len(text):] for cmd in matches]
@@ -58,8 +58,8 @@ class AutoCompleter:
             if state == 0:
                 print('\x07', end='', flush=True)
             return None
-        print(lcp, end='', flush=True)
-        return lcp
+        print(text + lcp, end='', flush=True)
+        return text + lcp
 
     
     @staticmethod
