@@ -13,7 +13,7 @@ class AutoCompleter:
         self.installed_commands = [cmd.split("/")[-1] for cmd in PathCommandLocator.list_all_commands()]
         self.commands = sorted(set(self.builtin_commands + self.installed_commands))
 
-    def completer(self, text, state):
+    def completer_v1(self, text, state):
         matches = [cmd for cmd in self.commands if cmd.startswith(text)]
         if len(matches) > 1:
             if state == 0: 
@@ -31,6 +31,39 @@ class AutoCompleter:
                 return res
         if state < len(matches):
             return matches[state] + " "
+
+    def completer(self, text, state):
+        matches = [cmd for cmd in self.commands if cmd.startswith(text)]
+        if state > 0:
+            return None
+        if len(matches) == 1:
+            return matches[0] + " "
+        if len(matches) == 0:
+            return None
+        longest_prefix = AutoCompleter.longest_common_prefix(matches)
+        return longest_prefix
+
+    
+    @staticmethod
+    def longest_common_prefix(strs):
+        if not strs or len(strs) == 0: 
+            return "" 
+        reference = strs[0]
+        longest_prefix = ''
+        for i in range(len(reference)):
+            char = reference[i]
+            all_contain_prefix = True
+            for chaine in strs:
+                if chaine[i] != char:
+                    all_contain_prefix = False
+                    break
+            if all_contain_prefix:
+                longest_prefix += char
+            else:
+                break
+        return longest_prefix
+
+
 
     def start(self):
         # Configure readline pour utiliser la complétion sur Tab
