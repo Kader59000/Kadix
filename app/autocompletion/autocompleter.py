@@ -51,8 +51,8 @@ class AutoCompleter:
             if state == 0:
                 print('\x07', end='', flush=True)
             return None
-        print(lcp)
-        return lcp
+        print('$ ' + text + lcp)
+        return '$ ' + text + lcp
 
     
     @staticmethod
