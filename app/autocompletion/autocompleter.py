@@ -34,8 +34,11 @@ class AutoCompleter:
 
     def completer(self, text, state):
         matches = [cmd for cmd in self.commands if cmd.startswith(text)]
-        if state > 0:
+        if state > 1:
             return None
+        if state == 0:
+            print('\x07', end='', flush=True)
+            return '\x07'
         if len(matches) == 1:
             return matches[0] + " "
         if len(matches) == 0:
