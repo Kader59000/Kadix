@@ -17,13 +17,18 @@ class PipelineOperator(Operator):
         # Ouvrir explicitement l'écrivain et exécuter la commande gauche en écrivant dedans.
         writer = os.fdopen(write_fd, "w")
         reader = os.fdopen(read_fd, "r")
-        self.left_command.execute(stdout=writer)
+        processIn = self.left_command.execute(stdout=writer)
         # s'assurer que les buffers sont vidés
         writer.flush()
         writer.close()
         # Ouvrir le lecteur et exécuter la commande droite en lisant depuis ce lecteur.
 
-        self.right_command.execute(stdin=reader)
+        processOut = self.right_command.execute(stdin=reader)
         reader.close()
+
+        if processIn:
+            processIn.wait()
+        if processOut:
+            processOut.wait()
         return None
 

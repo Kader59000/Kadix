@@ -37,11 +37,10 @@ class InstalledCommand(Command):
     def execute(self, stdin=None, stdout=None, stderr=None):
         """Lance la commande puis attend sa fin."""
         process = self.spawn(stdin=stdin, stdout=stdout, stderr=stderr)
-        
         sys.stdin = sys.__stdin__
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
-        return None
+        return process
 
     def spawn(self, stdin=None, stdout=None, stderr=None):
         """Démarre la commande sans attendre et retourne le processus."""
