@@ -20,4 +20,12 @@ class PipelineOperator(Operator):
         left_proc.wait()
         return None
 
+    def execute(self):
+        """Lance les deux commandes en chaînant la sortie gauche dans l'entrée droite."""
+        r, w = os.pipe()
+        self.left_command.execute(stdout=os.fdopen(w))
+        os.close(w)
+        self.right_command.execute(stdin=os.fdopen(r))
+        os.close(r)
+        return None
 

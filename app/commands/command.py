@@ -108,7 +108,13 @@ class BuiltinCommand(Command):
     def __init__(self, name, args):
         self.name = name
         self.args = args
-    def execute(self):
+    def execute(self, stdin=None, stdout=None, stderr=None):
+        if stdin is not None:
+            sys.stdin = stdin
+        if stdout is not None:
+            sys.stdout = stdout
+        if stderr is not None:
+            sys.stderr = stderr
         if self.name in BuiltinCommand.BUILTIN_COMMANDS:
             return BuiltinCommand.BUILTIN_COMMANDS[self.name](self.args)
         raise CommandNotFoundException(f"{self.name}: builtin command not found")
