@@ -116,5 +116,9 @@ class BuiltinCommand(Command):
         if stderr is not None:
             sys.stderr = stderr
         if self.name in BuiltinCommand.BUILTIN_COMMANDS:
-            return BuiltinCommand.BUILTIN_COMMANDS[self.name](self.args)
+            command_result =  BuiltinCommand.BUILTIN_COMMANDS[self.name](self.args)
+            sys.stdin = sys.__stdin__
+            sys.stdout = sys.__stdout__
+            sys.stderr = sys.__stderr__
+            return command_result
         raise CommandNotFoundException(f"{self.name}: builtin command not found")

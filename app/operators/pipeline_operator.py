@@ -20,11 +20,6 @@ class PipelineOperator(Operator):
             # Ouvrir explicitement l'écrivain et exécuter la commande gauche en écrivant dedans.
             writer = os.fdopen(write_fd, "w")
             self.left_command.execute(stdout=writer)
-            # fermer l'écrivain pour signaler EOF au lecteur
-            #reset les sysout et sysin
-            sys.stdout = sys.__stdout__
-            sys.stdin = sys.__stdin__
-
             # Ouvrir le lecteur et exécuter la commande droite en lisant depuis ce lecteur.
             reader = os.fdopen(read_fd, "r") 
             self.right_command.execute(stdin=reader)
@@ -32,9 +27,6 @@ class PipelineOperator(Operator):
             writer = None
             reader.close()
             reader = None
-            #reset les sysout et sysin
-            sys.stdout = sys.__stdout__
-            sys.stdin = sys.__stdin__
 
         finally:
             # Ne pas masquer les erreurs : fermer proprement tout flux restant.
