@@ -35,31 +35,12 @@ class AutoCompleter:
         
     def completer(self, text, state):
         matches = [cmd for cmd in self.commands if cmd.startswith(text)]
-        if state > 1: # On ne gère que le premier Tab
-            return None
-        if not matches:
-            # Aucun match, ring the bell
-            if state == 0:
-                print('\x07', end='', flush=True)
-            return None
-        if len(matches) == 1:
-            match = matches[0]
-            if text != match:
-                # Complète le suffixe manquant
-                suffix = match[len(text):]
-                print( text + suffix + ' ', end='', flush=True)
-                return text + suffix + " " if suffix else None
-            return None
-        # Plusieurs matches, complète le LCP des suffixes
-        suffixes = [cmd[len(text):] for cmd in matches]
-        lcp = AutoCompleter.longest_common_prefix(suffixes)
-        if not lcp:
-            # Plusieurs matches mais pas d'avancée possible, ring the bell
-            if state == 0:
-                print('\x07', end='', flush=True)
-            return None
-        print(text + lcp, end='', flush=True)
-        return text + lcp
+        if len(matches) == 0: # if no matches, we ring the bell
+            return 'x07'  
+        lcp = self.longest_common_prefix(matches)
+        if state == 0:
+            return lcp 
+        return matches[state - 1] + " " if state - 1 < len(matches) else None
 
     
     @staticmethod
