@@ -1,6 +1,6 @@
-import  readline
+import readline
 from app.commands.command import BuiltinCommand, PathCommandLocator
-import sys
+
 class AutoCompleter:
     """
     Classe pour gérer l'autocomplétion des commandes internes et installées du shell.
@@ -12,7 +12,6 @@ class AutoCompleter:
         # Récupère la liste des commandes installées (noms uniquement)
         self.installed_commands = [cmd.split("/")[-1] for cmd in PathCommandLocator.list_all_commands()]
         self.commands = sorted(set(self.builtin_commands + self.installed_commands))
-        self.last_processed_input = ""
 
     def completer_v1(self, text, state):
         matches = [cmd for cmd in self.commands if cmd.startswith(text)]
@@ -33,20 +32,30 @@ class AutoCompleter:
         if state < len(matches):
             return matches[state] + " "
         
-    def completer(self, text, state): 
-        readline.set_completer_delims(' \n')
+    def completer(self, text, state):
         matches = [cmd for cmd in self.commands if cmd.startswith(text)]
-        if len(matches) == 0: # if no matches, we ring the bell
-            return '\x07' 
+        if not matches:
+            if state == 0:
+                print('\x07', end='', flush=True)
+            return None
+
+        suffixes = [cmd[len(text):] for cmd in matches]
         if len(matches) == 1:
-            if (self.last_processed_input != matches[0] ):
-                self.last_processed_input = matches[0]
-                print(matches[0][len(text):] + " ", end='', flush=True)
-            return matches[0] + " "
-        lcp = self.longest_common_prefix(matches)
+            suffix = suffixes[0]
+            if suffix:
+                return suffix + " "
+            return None
+
+        lcp = AutoCompleter.longest_common_prefix(suffixes)
         if state == 0:
-            return lcp 
-        return matches[state] + " " if state < len(matches) and matches[state].startswith(lcp) else None
+            if not lcp:
+                print('\x07', end='', flush=True)
+                return None
+            return lcp
+        if state == 1:
+            print('  '.join(matches))
+            return None
+        return None
 
     
     @staticmethod
