@@ -31,4 +31,3 @@ class PipelineOperator(Operator):
         if processOut:
             processOut.wait()
         return None
-

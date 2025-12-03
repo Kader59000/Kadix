@@ -1,5 +1,5 @@
 import shlex
-from app.commands.command import Command, CommandNotFoundException, BuiltinCommand, PathCommandLocator
+from app.commands.command import Command, CommandNotFoundException, BuiltinCommand, PathCommandLocator, InstalledCommand
 from app.operators.pipeline_operator import PipelineOperator
 from app.operators.redirection_operator import RedirectionOperator, AppendOperator
 from app.autocompletion.manual_autocompleter import ManualAutoCompleter
@@ -15,22 +15,94 @@ def main():
         splitted_input = handle_input(user_input)
         if not splitted_input:
             continue
+        # Gestion des pipelines multiples (séparateur '|')
         if "|" in splitted_input:
-            pipe_index = splitted_input.index("|")
-            left_tokens = splitted_input[:pipe_index]
-            right_tokens = splitted_input[pipe_index + 1:]
-            if not left_tokens or not right_tokens:
+            # découpe en segments de tokens entre les '|'
+            segments = []
+            cur = []
+            for tok in splitted_input:
+                if tok == "|":
+                    if not cur:
+                        break
+                    segments.append(cur)
+                    cur = []
+                else:
+                    cur.append(tok)
+            if cur:
+                segments.append(cur)
+
+            # validation minimale
+            if len(segments) < 2 or any(len(s) == 0 for s in segments):
                 print("Invalid pipeline syntax.")
                 continue
+
             try:
-                left_cmd = Command.getCommand(left_tokens[0], left_tokens[1:])
-                right_cmd = Command.getCommand(right_tokens[0], right_tokens[1:])
-                operator = PipelineOperator("|", left_cmd, right_cmd)
-                operator.execute()
+                # construire les Command instances
+                cmds = [Command.getCommand(s[0], s[1:]) for s in segments]
             except CommandNotFoundException as e:
                 print(e)
-            except NotImplementedError as e:
-                print(e)
+                continue
+
+            # Exécuter le pipeline multi-commandes
+            def run_pipeline(commands):
+                n = len(commands)
+                if n == 0:
+                    return None
+                if n == 1:
+                    return commands[0].execute()
+
+                pipes = [os.pipe() for _ in range(n - 1)]
+                procs = []
+                try:
+                    for i, cmd in enumerate(commands):
+                        in_fd = pipes[i - 1][0] if i > 0 else None
+                        out_fd = pipes[i][1] if i < n - 1 else None
+
+                        if isinstance(cmd, InstalledCommand):
+                            proc = cmd.spawn(stdin=in_fd, stdout=out_fd)
+                            procs.append(proc)
+                        else:
+                            fin = os.fdopen(in_fd, "r") if in_fd is not None else None
+                            fout = os.fdopen(out_fd, "w") if out_fd is not None else None
+                            try:
+                                cmd.execute(stdin=fin, stdout=fout)
+                            finally:
+                                if fout is not None:
+                                    try:
+                                        fout.flush()
+                                    except Exception:
+                                        pass
+                                    fout.close()
+                                if fin is not None:
+                                    fin.close()
+
+                    # fermer les FD parentaux
+                    for r, w in pipes:
+                        try:
+                            os.close(r)
+                        except OSError:
+                            pass
+                        try:
+                            os.close(w)
+                        except OSError:
+                            pass
+
+                    # attendre les processus externes
+                    for p in procs:
+                        try:
+                            p.wait()
+                        except Exception:
+                            pass
+                finally:
+                    for r, w in pipes:
+                        for fd in (r, w):
+                            try:
+                                os.close(fd)
+                            except Exception:
+                                pass
+                return None
+
+            run_pipeline(cmds)
             continue
         # Recherche d'un opérateur de redirection ou d'append
         op_indices = [i for i, token in enumerate(splitted_input) if token in ['>', '1>', '2>', '>>', '1>>', '2>>']]
