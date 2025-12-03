@@ -18,9 +18,9 @@ class PipelineOperator(Operator):
         reader = None
         # Ouvrir explicitement l'écrivain et exécuter la commande gauche en écrivant dedans.
         writer = os.fdopen(write_fd, "w")
+        reader = os.fdopen(read_fd, "r")
         self.left_command.execute(stdout=writer)
         # s'assurer que les buffers sont vidés
-        reader = os.fdopen(read_fd, "r")
         writer.flush()
         writer.close()
         # Ouvrir le lecteur et exécuter la commande droite en lisant depuis ce lecteur.
