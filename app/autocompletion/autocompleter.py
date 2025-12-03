@@ -35,14 +35,22 @@ class AutoCompleter:
         
     def completer(self, text, state):
         matches = [cmd for cmd in self.commands if cmd.startswith(text)]
-        if len(matches) == 0: # if no matches, we ring the bell
-            return 'x07' 
+        if len(matches) == 0:
+            if state == 0:
+                print('\x07', end='', flush=True)
+            return None
         if len(matches) == 1:
-            return matches[0] + " "
+            match = matches[0]
+            if text != match:
+                suffix = match[len(text):]
+                return suffix + " " if suffix else None
+            return None
         lcp = self.longest_common_prefix(matches)
         if state == 0:
-            return lcp 
-        return matches[state] + " " if state < len(matches) else None
+            # Complète uniquement le suffixe du LCP
+            suffix = lcp[len(text):]
+            return suffix if suffix else None
+        return None
 
     
     @staticmethod
