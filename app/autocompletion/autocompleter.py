@@ -38,7 +38,7 @@ class AutoCompleter:
         matches = [cmd for cmd in self.commands if cmd.startswith(text)]
         if len(matches) == 0: # if no matches, we ring the bell
             return '\x07' 
-        if len(matches) == 1 and state <= 1:
+        if len(matches) == 1:
             return matches[0] + " "
         lcp = self.longest_common_prefix(matches)
         if state == 0:
