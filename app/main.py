@@ -1,17 +1,16 @@
-import sys
 import shlex
-from app.commands.command import Command, CommandNotFoundException
+from app.commands.command import Command, CommandNotFoundException, BuiltinCommand, PathCommandLocator
 from app.operators.redirection_operator import RedirectionOperator, AppendOperator
-from app.autocompletion.autocompleter import AutoCompleter
+from app.autocompletion.manual_autocompleter import ManualAutoCompleter
 
 should_exit = False
 
 def main():
-    # Active l'autocomplétion sur les commandes internes
-    AutoCompleter().start()
+    candidates = list(BuiltinCommand.BUILTIN_COMMANDS.keys())
+    candidates += [cmd.split("/")[-1] for cmd in PathCommandLocator.list_all_commands()]
+    completer = ManualAutoCompleter(candidates)
     while True:
-        sys.stdout.write("$ ")
-        user_input = input()
+        user_input = completer.read_line()
         splitted_input = handle_input(user_input)
         # Recherche d'un opérateur de redirection ou d'append
         op_indices = [i for i, token in enumerate(splitted_input) if token in ['>', '1>', '2>', '>>', '1>>', '2>>']]
