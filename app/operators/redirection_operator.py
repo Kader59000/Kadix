@@ -22,8 +22,6 @@ class RedirectionOperator(Operator):
             else:
                 print(f"Invalid file descriptor: {self.file_descriptor}")
             process = self.command.execute()
-            if process:
-                process.wait()
         # Restaure les flux standard
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
@@ -47,8 +45,6 @@ class AppendOperator(Operator):
             elif self.file_descriptor == "2":
                 sys.stderr = f
             process = self.command.execute()
-            if process:
-                process.wait()
         # Restaure les flux standard
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
