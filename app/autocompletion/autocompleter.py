@@ -42,7 +42,7 @@ class AutoCompleter:
         lcp = self.longest_common_prefix(matches)
         if state == 0:
             return lcp 
-        return matches[state - 1] + " " if state - 1 < len(matches) else None
+        return matches[state] + " " if state < len(matches) else None
 
     
     @staticmethod
