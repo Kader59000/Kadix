@@ -6,6 +6,8 @@ from typing import Iterable
 class ManualAutoCompleter:
     def __init__(self, candidates: Iterable[str]):
         self.commands = sorted(set(candidates))
+        self._pending_matches = None
+        self._pending_buffer = ""
 
     def read_line(self, prompt: str = "$ ") -> str:
         fd = sys.stdin.fileno()
@@ -18,10 +20,10 @@ class ManualAutoCompleter:
             while True:
                 ch = sys.stdin.read(1)
                 if ch == "\t":
-                    inserted = self._handle_completion(buffer)
-                    buffer += inserted
-                    sys.stdout.write(inserted)
-                    sys.stdout.flush()
+                        inserted = self._handle_completion(buffer)
+                        buffer += inserted
+                        sys.stdout.write(inserted)
+                        sys.stdout.flush()
                 elif ch in ("\n", "\r"):
                     sys.stdout.write("\n")
                     return buffer
@@ -38,7 +40,14 @@ class ManualAutoCompleter:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_attrs)
 
     def _handle_completion(self, buffer: str) -> str:
+        if self._pending_matches and buffer == self._pending_buffer:
+            self._print_matches(self._pending_matches, buffer)
+            self._pending_matches = None
+            return ""
+
         matches = [cmd for cmd in self.commands if cmd.startswith(buffer)]
+        if buffer != self._pending_buffer:
+            self._pending_matches = None
         if not matches:
             self._bell()
             return ""
@@ -47,15 +56,19 @@ class ManualAutoCompleter:
             return endings[0] + " " if endings[0] and not endings[0].endswith(" ") else endings[0]
         lcp = self._longest_common_prefix(endings)
         if lcp:
+            self._pending_matches = None
             return lcp
-        self._print_matches(matches)
+        self._pending_matches = matches
+        self._pending_buffer = buffer
+        self._bell()
         return ""
 
-    def _print_matches(self, matches: Iterable[str]) -> None:
+    def _print_matches(self, matches: Iterable[str], buffer: str) -> None:
         sys.stdout.write("\n")
         sys.stdout.write("  ".join(matches))
         sys.stdout.write("\n")
         sys.stdout.write("$ ")
+        sys.stdout.write(buffer)
         sys.stdout.flush()
 
     def _bell(self) -> None:
