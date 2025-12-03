@@ -1,4 +1,5 @@
 import subprocess
+import os
 from app.commands.command import InstalledCommand
 from app.operators.operator import Operator
 class PipelineOperator(Operator):
