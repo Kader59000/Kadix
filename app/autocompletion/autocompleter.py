@@ -41,7 +41,7 @@ class AutoCompleter:
         if len(matches) == 1:
             if (self.last_processed_input != matches[0] ):
                 self.last_processed_input = matches[0]
-                print(matches[0] + " ", end='', flush=True)
+                print(matches[0][len(text):] + " ", end='', flush=True)
             return matches[0] + " "
         lcp = self.longest_common_prefix(matches)
         if state == 0:
