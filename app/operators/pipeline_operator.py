@@ -14,8 +14,6 @@ class PipelineOperator(Operator):
     def execute(self):
         """Lance les deux commandes en chaînant la sortie gauche dans l'entrée droite."""
         read_fd, write_fd = os.pipe()
-        writer = None
-        reader = None
         # Ouvrir explicitement l'écrivain et exécuter la commande gauche en écrivant dedans.
         writer = os.fdopen(write_fd, "w")
         reader = os.fdopen(read_fd, "r")
@@ -26,7 +24,6 @@ class PipelineOperator(Operator):
         # Ouvrir le lecteur et exécuter la commande droite en lisant depuis ce lecteur.
 
         self.right_command.execute(stdin=reader)
-        reader.flush()
         reader.close()
         return None
 
