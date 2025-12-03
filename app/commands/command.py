@@ -112,7 +112,7 @@ class BuiltinCommand(Command):
     def __init__(self, name, args):
         self.name = name
         self.args = args
-    def execute(self, stdin=None, stdout=None, stderr=None):
+    def execute(self, stdin=None, stdout=None, stderr=None, wait=True):
         if stdin is not None:
             sys.stdin = stdin
         if stdout is not None:
