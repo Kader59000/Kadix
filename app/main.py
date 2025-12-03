@@ -1,5 +1,6 @@
 import shlex
 from app.commands.command import Command, CommandNotFoundException, BuiltinCommand, PathCommandLocator, InstalledCommand
+import os
 from app.operators.pipeline_operator import PipelineOperator
 from app.operators.redirection_operator import RedirectionOperator, AppendOperator
 from app.autocompletion.manual_autocompleter import ManualAutoCompleter
