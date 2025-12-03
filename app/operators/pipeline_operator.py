@@ -21,11 +21,11 @@ class PipelineOperator(Operator):
         self.left_command.execute(stdout=writer)
         # s'assurer que les buffers sont vidés
         writer.flush()
-
+        writer.close()
         # Ouvrir le lecteur et exécuter la commande droite en lisant depuis ce lecteur.
         reader = os.fdopen(read_fd, "r")
         self.right_command.execute(stdin=reader)
-        writer.close()
+        reader.flush()
         reader.close()
         return None
 
