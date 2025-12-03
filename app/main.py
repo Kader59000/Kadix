@@ -1,5 +1,6 @@
 import shlex
 from app.commands.command import Command, CommandNotFoundException, BuiltinCommand, PathCommandLocator
+from app.operators.pipeline_operator import PipelineOperator
 from app.operators.redirection_operator import RedirectionOperator, AppendOperator
 from app.autocompletion.manual_autocompleter import ManualAutoCompleter
 
@@ -12,6 +13,25 @@ def main():
     while True:
         user_input = completer.read_line()
         splitted_input = handle_input(user_input)
+        if not splitted_input:
+            continue
+        if "|" in splitted_input:
+            pipe_index = splitted_input.index("|")
+            left_tokens = splitted_input[:pipe_index]
+            right_tokens = splitted_input[pipe_index + 1:]
+            if not left_tokens or not right_tokens:
+                print("Invalid pipeline syntax.")
+                continue
+            try:
+                left_cmd = Command.getCommand(left_tokens[0], left_tokens[1:])
+                right_cmd = Command.getCommand(right_tokens[0], right_tokens[1:])
+                operator = PipelineOperator("|", left_cmd, right_cmd)
+                operator.execute()
+            except CommandNotFoundException as e:
+                print(e)
+            except NotImplementedError as e:
+                print(e)
+            continue
         # Recherche d'un opérateur de redirection ou d'append
         op_indices = [i for i, token in enumerate(splitted_input) if token in ['>', '1>', '2>', '>>', '1>>', '2>>']]
         if op_indices:
