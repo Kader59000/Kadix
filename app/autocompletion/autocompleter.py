@@ -34,7 +34,7 @@ class AutoCompleter:
             return matches[state] + " "
         
     def completer(self, text, state):
-        readline.set_completer_delims(' \t\n')
+        readline.set_completer_delims(' \n')
         matches = [cmd for cmd in self.commands if cmd.startswith(text)]
         if len(matches) == 0: # if no matches, we ring the bell
             return 'x07' 
