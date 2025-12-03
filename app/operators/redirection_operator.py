@@ -44,7 +44,9 @@ class AppendOperator(Operator):
                 sys.stdout = f
             elif self.file_descriptor == "2":
                 sys.stderr = f
-            self.command.execute()
+            process = self.command.execute()
+            if process:
+                process.wait()
         # Restaure les flux standard
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
