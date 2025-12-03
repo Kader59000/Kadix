@@ -44,7 +44,7 @@ class ManualAutoCompleter:
             return ""
         endings = [cmd[len(buffer):] for cmd in matches]
         if len(matches) == 1:
-            return endings[0]
+            return endings[0] + " " if endings[0] and not endings[0].endswith(" ") else endings[0]
         lcp = self._longest_common_prefix(endings)
         if lcp:
             return lcp
