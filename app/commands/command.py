@@ -34,11 +34,19 @@ class InstalledCommand(Command):
         self.path = path
         self.args = args
  
-    def execute(self):
-        program_name = self.name  # juste le nom, pas le chemin complet
-        process = subprocess.Popen([program_name] + list(self.args), executable=self.path, stdout=sys.stdout, stdin=sys.stdin, stderr=sys.stderr)
+    def execute(self, stdin=None, stdout=None, stderr=None):
+        """Lance la commande puis attend sa fin."""
+        process = self.spawn(stdin=stdin, stdout=stdout, stderr=stderr)
         process.wait()
         return None
+
+    def spawn(self, stdin=None, stdout=None, stderr=None):
+        """Démarre la commande sans attendre et retourne le processus."""
+        std_in = stdin if stdin is not None else sys.stdin
+        std_out = stdout if stdout is not None else sys.stdout
+        std_err = stderr if stderr is not None else sys.stderr
+        program_name = self.name  # juste le nom, pas le chemin complet
+        return subprocess.Popen([program_name] + list(self.args), executable=self.path, stdin=std_in, stdout=std_out, stderr=std_err)
     
     @staticmethod
     def is_installed_command(self):
