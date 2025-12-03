@@ -26,7 +26,7 @@ class PipelineOperator(Operator):
             sys.stdin = sys.__stdin__
 
             # Ouvrir le lecteur et exécuter la commande droite en lisant depuis ce lecteur.
-            reader = os.fdopen(read_fd, "r")
+            reader = os.fdopen(read_fd, "r") 
             self.right_command.execute(stdin=reader)
             writer.close()
             writer = None
