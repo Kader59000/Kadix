@@ -21,7 +21,7 @@ class HistoryManager:
     def __init__(self):
         self.history: List[str] = []
 
-    def getHistory(self, max_entries):
+    def getHistory(self, max_entries = None):
         """Retourne l'historique des commandes.
 
         Args:
