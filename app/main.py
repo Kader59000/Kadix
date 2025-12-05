@@ -43,7 +43,7 @@ def main():
                 # construire les Command instances
                 cmds = [Command.getCommand(s[0], s[1:]) for s in segments]
             except CommandNotFoundException as e:
-                history.logCommand('invalid_command')
+                history.logCommand(user_input)
                 print(e)
                 continue
 
@@ -132,7 +132,7 @@ def main():
                 cmd = Command.getCommand(command_input, args)
                 result = cmd.execute()
             except CommandNotFoundException as e:
-                history.logCommand('invalid_command')
+                history.logCommand(user_input)
                 print(f"{command_input}: command not found")
             except SystemExit:
                 break
