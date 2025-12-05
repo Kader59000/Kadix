@@ -12,7 +12,7 @@ def main():
     candidates = list(BuiltinCommand.BUILTIN_COMMANDS.keys())
     candidates += [cmd.split("/")[-1] for cmd in PathCommandLocator.list_all_commands()]
     completer = ManualAutoCompleter(candidates)
-    history = HistoryManager()
+    history = HistoryManager.getInstance()
     while True:
         user_input = completer.read_line()
         splitted_input = handle_input(user_input)

@@ -10,6 +10,16 @@ class HistoryManager:
     `./history_file.txt`. Si le fichier n'existe pas il sera créé.
     """
 
+    @staticmethod
+    def getInstance(history_file=None):
+        """Retourne l'instance singleton de HistoryManager pour le fichier par défaut,
+        ou une nouvelle instance pour un fichier spécifique."""
+        if history_file is not None:
+            return HistoryManager(history_file)
+        if not hasattr(HistoryManager, "_instance"):
+            HistoryManager._instance = HistoryManager()
+        return HistoryManager._instance
+
     def __init__(self, history_file=None):
         self._lock = threading.Lock()
         self._history: List[tuple[int, str]] = []

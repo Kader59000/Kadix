@@ -30,7 +30,7 @@ def history_command(args):
             return
         file_path = os.path.expanduser(args[1])
         try:
-            hist_mgr = HistoryManager(file_path)
+            hist_mgr = HistoryManager.getInstance(file_path)
             for index, command in hist_mgr.getHistory():
                 print(f"    {index}  {command}")
         except FileNotFoundError:
@@ -45,7 +45,7 @@ def history_command(args):
             except ValueError:
                 print("history: invalid number of entries")
                 return
-        history = HistoryManager()
+        history = HistoryManager.getInstance()
         for index, command in history.getHistory(max_entries):
             print(f"    {index}  {command}")
 
