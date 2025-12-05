@@ -15,13 +15,6 @@ def main():
     history = HistoryManager.getInstance()
     while True:
         user_input = completer.read_line()
-        # enregistrer la commande dans l'historique (si non vide)
-        if user_input and user_input.strip():
-            try:
-                history.logCommand(user_input)
-            except Exception:
-                # ne doit pas empêcher le shell de continuer
-                pass
         splitted_input = handle_input(user_input)
         if not splitted_input:
             continue
