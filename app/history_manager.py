@@ -42,7 +42,7 @@ class HistoryManager:
                 # fichier non existant -> démarrer vide (déjà essayé de créer)
                 pass
 
-    def logCommand(self, max_entries: Optional[int], command: str) -> None:
+    def logCommand(self, command: str, max_entries: Optional[int] = None) -> None:
         """Ajoute `command` à l'historique et l'écrit dans le fichier (si configuré).
 
         Le paramètre `command` est stocké tel quel (chaîne). Si `max_entries`
