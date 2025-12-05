@@ -9,7 +9,6 @@ class HistoryManager:
     L'historique est conservé en mémoire et persisté dans le fichier
     `./history_file.txt`. Si le fichier n'existe pas il sera créé.
     """
-    history_file = os.path.abspath("./history_file.txt")  # Variable de classe
 
     @staticmethod
     def getInstance(history_file=None):
@@ -29,7 +28,7 @@ class HistoryManager:
         if history_file is not None:
             self.history_file = os.path.abspath(history_file)
         else:
-            self.history_file = HistoryManager.history_file
+            self.history_file = os.path.abspath("./history_file.txt")
 
         # s'assurer que le fichier existe (création si besoin)
         try:
@@ -73,12 +72,11 @@ class HistoryManager:
                     pass
 
     @staticmethod
-    def setHistoryFile(history_file):
+    def setHistoryFile(history_file, command=None):
         """Change le fichier d'historique et recharge l'historique de l'instance singleton."""
-        HistoryManager.history_file = os.path.abspath(history_file)
         if hasattr(HistoryManager, "_instance"):
             instance = HistoryManager._instance
-            instance.history_file = HistoryManager.history_file
+            instance.history_file = os.path.abspath(history_file)
             # Recharger l'historique
             instance._history = []
             instance._next_index = 1
@@ -96,6 +94,22 @@ class HistoryManager:
                                     instance._history.append((instance._next_index, line))
                                     instance._next_index += 1
                     except FileNotFoundError:
+                        pass
+            # Ajouter la commande au début si fournie
+            if command:
+                instance._history.insert(0, (1, command))
+                # Ajuster les indices
+                for i in range(1, len(instance._history)):
+                    idx, cmd = instance._history[i]
+                    instance._history[i] = (i + 1, cmd)
+                instance._next_index = len(instance._history) + 1
+                # Réécrire le fichier
+                if instance.history_file:
+                    try:
+                        with open(instance.history_file, "w", encoding="utf-8") as f:
+                            for idx, cmd in instance._history:
+                                f.write(cmd.rstrip("\n") + "\n")
+                    except Exception:
                         pass
 
     def getHistory(self, max_entries: Optional[int] = None) -> List[tuple[int, str]]:
