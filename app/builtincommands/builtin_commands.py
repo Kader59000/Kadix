@@ -24,8 +24,10 @@ def pwd_command(args):
     print(os.getcwd())
 
 def history_command(args):
-    history = HistoryManager.getInstance()
-    history.logCommand('history')
+    max_entries = None
+    if len(args) != 0:
+        max_entries = args[0]
+    history = HistoryManager.getInstance(max_entries)
     for index, command in enumerate(history.getHistory(), start=1):
         print(f"    {index}  {command}")
 

@@ -17,12 +17,11 @@ class HistoryManager:
             HistoryManager._instance = HistoryManager()
         return HistoryManager._instance
 
-    def __init__(self, max_entries: Optional[int] = None):
+    def __init__(self):
         self._lock = threading.Lock()
         self._history: List[str] = []
         # fichier d'historique fixe (relatif au cwd)
         self.history_file = os.path.abspath("./history_file.txt")
-        self.max_entries = max_entries
 
         # s'assurer que le fichier existe (création si besoin)
         try:
@@ -43,7 +42,7 @@ class HistoryManager:
                 # fichier non existant -> démarrer vide (déjà essayé de créer)
                 pass
 
-    def logCommand(self, command: str) -> None:
+    def logCommand(self, max_entries: Optional[int], command: str) -> None:
         """Ajoute `command` à l'historique et l'écrit dans le fichier (si configuré).
 
         Le paramètre `command` est stocké tel quel (chaîne). Si `max_entries`
@@ -55,9 +54,9 @@ class HistoryManager:
         cmd = str(command)
         with self._lock:
             self._history.append(cmd)
-            if self.max_entries is not None and len(self._history) > self.max_entries:
+            if max_entries is not None and len(self._history) > max_entries:
                 # conserver les dernières `max_entries`
-                self._history = self._history[-self.max_entries :]
+                self._history = self._history[-max_entries :]
 
             if self.history_file:
                 # ouvrir en append et écrire la ligne
