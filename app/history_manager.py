@@ -49,3 +49,16 @@ class HistoryManager:
                 for line in f:
                     self.history.append(line.rstrip('\n'))
 
+    def saveHistoryToFile(self, file_path: Optional[str] = None):
+        """Sauvegarde l'historique dans un fichier.
+
+        Args:
+            file_path (Optional[str]): Chemin du fichier. Si None, utilise
+                `self.history_file`.
+        """
+        if file_path is None:
+            file_path = self.history_file
+        with open(file_path, 'w') as f:
+            for command in self.history:
+                f.write(command + '\n')
+
