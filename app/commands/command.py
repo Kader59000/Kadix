@@ -100,13 +100,14 @@ class BuiltinCommand(Command):
     """
     Commande interne au shell.
     """
-    from app.builtincommands.builtin_commands import echo_command, type_command, exit_command, pwd_command, cd_command
+    from app.builtincommands.builtin_commands import echo_command, type_command, exit_command, pwd_command, cd_command, history_command
     BUILTIN_COMMANDS = {
                 "echo": echo_command,
                 "type": type_command,
                 "exit": exit_command,
                 "pwd": pwd_command,
-                "cd": cd_command
+                "cd": cd_command,
+                "history": history_command,
             }
 
     def __init__(self, name, args):

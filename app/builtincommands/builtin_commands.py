@@ -1,5 +1,5 @@
 import os
-
+from app.history_manager import HistoryManager
 def echo_command(args):
     print(' '.join(args))
 
@@ -22,6 +22,11 @@ def exit_command(args):
 
 def pwd_command(args):
     print(os.getcwd())
+
+def history_command(args):
+    history = HistoryManager.getInstance()
+    for index, command in enumerate(history.getHistory(), start=1):
+        print(f"    {index}  {command}")
 
 def cd_command(args):
     if len(args) != 1:

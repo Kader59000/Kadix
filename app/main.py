@@ -4,6 +4,7 @@ import os
 from app.operators.pipeline_operator import PipelineOperator
 from app.operators.redirection_operator import RedirectionOperator, AppendOperator
 from app.autocompletion.manual_autocompleter import ManualAutoCompleter
+from app.history_manager import HistoryManager
 
 should_exit = False
 
@@ -11,8 +12,16 @@ def main():
     candidates = list(BuiltinCommand.BUILTIN_COMMANDS.keys())
     candidates += [cmd.split("/")[-1] for cmd in PathCommandLocator.list_all_commands()]
     completer = ManualAutoCompleter(candidates)
+    history = HistoryManager.getInstance()
     while True:
         user_input = completer.read_line()
+        # enregistrer la commande dans l'historique (si non vide)
+        if user_input and user_input.strip():
+            try:
+                history.logCommand(user_input)
+            except Exception:
+                # ne doit pas empêcher le shell de continuer
+                pass
         splitted_input = handle_input(user_input)
         if not splitted_input:
             continue

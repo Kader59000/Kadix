@@ -1,0 +1,6 @@
+echo zebi la mouche en bikini
+type history
+history
+exit
+history
+exit
