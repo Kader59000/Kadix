@@ -32,7 +32,7 @@ class HistoryManager:
             self.history_file = None
 
         # Charger l'historique existant si le fichier est présent
-        if self.history_file:
+        if self.history_file and False:
             try:
                 with open(self.history_file, "r", encoding="utf-8") as f:
                     for line in f:
