@@ -33,8 +33,10 @@ class HistoryManager:
         """
         if max_entries is None:
             max_entries = len(self.history)
+        hist = []
         for i in range(max(0, len(self.history) - max_entries), len(self.history)):
-            yield (i + 1, self.history[i])
+            hist.append((i + 1, self.history[i]))
+        return hist
     
     def logCommand(self, command: str):
         """Ajoute une commande à l'historique et la persiste dans le fichier."""
