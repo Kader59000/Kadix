@@ -73,7 +73,7 @@ class HistoryManager:
                     pass
 
     @staticmethod
-    def setHistoryFile(cls, history_file):
+    def setHistoryFile(history_file):
         """Change le fichier d'historique et recharge l'historique de l'instance singleton."""
         cls.history_file = os.path.abspath(history_file)
         if hasattr(cls, "_instance"):

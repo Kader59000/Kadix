@@ -38,7 +38,7 @@ def history_command(args):
             except ValueError:
                 print("history: invalid number of entries")
                 return
-        history = HistoryManager.getInstance()
+        history = HistoryManager.getInstance(HistoryManager.history_file)
         for index, command in history.getHistory(max_entries):
             print(f"    {index}  {command}")
 
