@@ -122,7 +122,7 @@ class BuiltinCommand(Command):
         if stderr is not None:
             sys.stderr = stderr
         if self.name in BuiltinCommand.BUILTIN_COMMANDS:
-            HistoryManager.getInstance().logCommand(trim(f"{self.name} {' '.join(self.args)}")) 
+            HistoryManager.getInstance().logCommand(f"{self.name} {' '.join(self.args)}".strip()) 
             command_result =  BuiltinCommand.BUILTIN_COMMANDS[self.name](self.args)
             sys.stdin = sys.__stdin__
             sys.stdout = sys.__stdout__
