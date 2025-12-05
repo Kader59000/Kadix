@@ -49,6 +49,20 @@ class HistoryManager:
                 for line in f:
                     self.history.append(line.rstrip('\n'))
 
+    def saveHistoryToFile(self, file_path: str) -> None:
+        """Enregistre l'historique courant dans `file_path` (écrase le fichier).
+
+        Lève les exceptions en cas d'erreur d'écriture pour que l'appelant puisse
+        les traiter et afficher un message d'erreur si besoin.
+        """
+        abs_path = os.path.abspath(file_path)
+        # Créer le répertoire cible si nécessaire
+        parent = os.path.dirname(abs_path)
+        if parent and not os.path.exists(parent):
+            os.makedirs(parent, exist_ok=True)
+        with open(abs_path, 'w', encoding='utf-8') as f:
+            for cmd in self.history:
+                f.write(cmd.rstrip('\n') + '\n')
     def saveHistoryToFile(self, file_path: Optional[str] = None):
         """Sauvegarde l'historique dans un fichier.
 

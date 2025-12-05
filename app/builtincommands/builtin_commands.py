@@ -31,6 +31,18 @@ def history_command(args):
         file_path = os.path.expanduser(args[1])
         history = HistoryManager.getInstance()
         history.appendHistoryFromFile(file_path)
+        return
+    if args and args[0] == '-w':
+        if len(args) < 2:
+            print("history -w: missing file operand")
+            return
+        file_path = os.path.expanduser(args[1])
+        history = HistoryManager.getInstance()
+        try:
+            history.saveHistoryToFile(file_path)
+        except Exception as e:
+            print(f"history -w: error writing {file_path}: {e}")
+        return
     else:
         max_entries = None
         if args:
