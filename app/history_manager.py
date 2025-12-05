@@ -75,10 +75,10 @@ class HistoryManager:
     @staticmethod
     def setHistoryFile(history_file):
         """Change le fichier d'historique et recharge l'historique de l'instance singleton."""
-        cls.history_file = os.path.abspath(history_file)
-        if hasattr(cls, "_instance"):
-            instance = cls._instance
-            instance.history_file = cls.history_file
+        HistoryManager.history_file = os.path.abspath(history_file)
+        if hasattr(HistoryManager, "_instance"):
+            instance = HistoryManager._instance
+            instance.history_file = HistoryManager.history_file
             # Recharger l'historique
             instance._history = []
             instance._next_index = 1
