@@ -52,6 +52,7 @@ class HistoryManager:
         if command is None:
             return
         cmd = str(command)
+        max_entries = max_entries if max_entries is None else int(max_entries)
         with self._lock:
             self._history.append(cmd)
             if max_entries is not None and len(self._history) > max_entries:
@@ -69,6 +70,7 @@ class HistoryManager:
 
     def getHistory(self, max_entries: Optional[int] = None) -> List[str]:
         """Retourne une copie de la liste d'historique (de la plus ancienne à la plus récente)."""
+        max_entries = max_entries if max_entries is None else int(max_entries)
         with self._lock:
             if max_entries is not None:
                 return list(self._history[-max_entries:])
