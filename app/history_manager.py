@@ -67,7 +67,9 @@ class HistoryManager:
                     # N'échoue pas si on ne peut pas écrire l'historique
                     pass
 
-    def getHistory(self) -> List[str]:
+    def getHistory(self, max_entries: Optional[int] = None) -> List[str]:
         """Retourne une copie de la liste d'historique (de la plus ancienne à la plus récente)."""
         with self._lock:
+            if max_entries is not None:
+                return list(self._history[-max_entries:])
             return list(self._history)
