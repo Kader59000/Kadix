@@ -18,6 +18,8 @@ def type_command(args):
 
 def exit_command(args):
     import sys
+    history = HistoryManager.getInstance()
+    history.saveHistoryToFile(os.environ.get("HISTFILE"))
     sys.exit(0)
 
 def pwd_command(args):
