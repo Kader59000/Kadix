@@ -19,7 +19,8 @@ class HistoryManager:
 
     def __init__(self):
         self._lock = threading.Lock()
-        self._history: List[str] = []
+        self._history: List[tuple[int, str]] = []
+        self._next_index = 1
         # fichier d'historique fixe (relatif au cwd)
         self.history_file = os.path.abspath("./history_file.txt")
 
@@ -37,7 +38,8 @@ class HistoryManager:
                     for line in f:
                         line = line.rstrip("\n")
                         if line:
-                            self._history.append(line)
+                            self._history.append((self._next_index, line))
+                            self._next_index += 1
             except FileNotFoundError:
                 # fichier non existant -> démarrer vide (déjà essayé de créer)
                 pass
@@ -51,7 +53,8 @@ class HistoryManager:
             return
         cmd = str(command)
         with self._lock:
-            self._history.append(cmd)
+            self._history.append((self._next_index, cmd))
+            self._next_index += 1
 
             if self.history_file:
                 # ouvrir en append et écrire la ligne
@@ -62,7 +65,7 @@ class HistoryManager:
                     # N'échoue pas si on ne peut pas écrire l'historique
                     pass
 
-    def getHistory(self, max_entries: Optional[int] = None) -> List[str]:
+    def getHistory(self, max_entries: Optional[int] = None) -> List[tuple[int, str]]:
         """Retourne une copie de la liste d'historique (de la plus ancienne à la plus récente)."""
         max_entries = max_entries if max_entries is None else int(max_entries)
         with self._lock:

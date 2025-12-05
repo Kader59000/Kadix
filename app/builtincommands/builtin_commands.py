@@ -28,7 +28,7 @@ def history_command(args):
     if len(args) != 0:
         max_entries = args[0]
     history = HistoryManager.getInstance()
-    for index, command in enumerate(history.getHistory(max_entries), start=1):
+    for index, command in history.getHistory(max_entries):
         print(f"    {index}  {command}")
 
 def cd_command(args):
