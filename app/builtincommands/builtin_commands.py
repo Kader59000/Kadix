@@ -30,7 +30,6 @@ def history_command(args):
             return
         file_path = os.path.expanduser(args[1])
         history = HistoryManager.getInstance()
-        history.logCommand(f"history -r {file_path}")
         history.appendHistoryFromFile(file_path)
     else:
         max_entries = None
