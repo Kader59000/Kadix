@@ -9,7 +9,9 @@ class HistoryManager:
     L'historique est conservé en mémoire et persisté dans le fichier
     `./history_file.txt`. Si le fichier n'existe pas il sera créé.
     """
-    history_file = os.path.abspath("./history_file.txt")  # Variable de classe
+    # Variable de classe : prendre `HISTFILE` si défini, sinon fallback local
+    _env_hist = os.environ.get("HISTFILE")
+    history_file = os.path.abspath(_env_hist) if _env_hist else os.path.abspath("./history_file.txt")
 
     @staticmethod
     def getInstance():
