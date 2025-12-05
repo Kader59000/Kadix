@@ -9,6 +9,7 @@ class HistoryManager:
     L'historique est conservé en mémoire et persisté dans le fichier
     `./history_file.txt`. Si le fichier n'existe pas il sera créé.
     """
+    history_file = os.path.abspath("./history_file.txt")  # Variable de classe
 
     @staticmethod
     def getInstance(history_file=None):
@@ -25,10 +26,10 @@ class HistoryManager:
         self._history: List[tuple[int, str]] = []
         self._next_index = 1
         # fichier d'historique
-        if history_file is None:
-            self.history_file = os.path.abspath("./history_file.txt")
-        else:
+        if history_file is not None:
             self.history_file = os.path.abspath(history_file)
+        else:
+            self.history_file = HistoryManager.history_file
 
         # s'assurer que le fichier existe (création si besoin)
         try:
@@ -71,24 +72,28 @@ class HistoryManager:
                     # N'échoue pas si on ne peut pas écrire l'historique
                     pass
 
-    def setHistoryFile(self, history_file):
-        """Change le fichier d'historique et recharge l'historique."""
-        self.history_file = os.path.abspath(history_file)
-        # Recharger l'historique
-        self._history = []
-        self._next_index = 1
-        if self.history_file:
-            try:
-                open(self.history_file, "a", encoding="utf-8").close()
-            except Exception:
-                self.history_file = None
-            if self.history_file:
+    @staticmethod
+    def setHistoryFile(cls, history_file):
+        """Change le fichier d'historique et recharge l'historique de l'instance singleton."""
+        cls.history_file = os.path.abspath(history_file)
+        if hasattr(cls, "_instance"):
+            instance = cls._instance
+            instance.history_file = cls.history_file
+            # Recharger l'historique
+            instance._history = []
+            instance._next_index = 1
+            if instance.history_file:
                 try:
-                    with open(self.history_file, "r", encoding="utf-8") as f:
-                        for line in f:
-                            line = line.rstrip("\n")
-                            if line:
-                                self._history.append((self._next_index, line))
-                                self._next_index += 1
-                except FileNotFoundError:
-                    pass
+                    open(instance.history_file, "a", encoding="utf-8").close()
+                except Exception:
+                    instance.history_file = None
+                if instance.history_file:
+                    try:
+                        with open(instance.history_file, "r", encoding="utf-8") as f:
+                            for line in f:
+                                line = line.rstrip("\n")
+                                if line:
+                                    instance._history.append((instance._next_index, line))
+                                    instance._next_index += 1
+                    except FileNotFoundError:
+                        pass
