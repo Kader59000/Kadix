@@ -29,7 +29,9 @@ def history_command(args):
             print("history -r: missing file operand")
             return
         file_path = os.path.expanduser(args[1])
-        HistoryManager.setHistoryFile(file_path, f"history -r {file_path}")
+        history = HistoryManager.getInstance()
+        history.logCommand(f"history -r {file_path}")
+        history.appendHistoryFromFile(file_path)
     else:
         max_entries = None
         if args:
