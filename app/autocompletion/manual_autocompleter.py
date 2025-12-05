@@ -2,12 +2,14 @@ import sys
 import tty
 import termios
 from typing import Iterable
+from app.autocompletion.history_navigator import HistoryNavigator
 
 class ManualAutoCompleter:
     def __init__(self, candidates: Iterable[str]):
         self.commands = sorted(set(candidates))
         self._pending_matches = None
         self._pending_buffer = ""
+        self.navigator = HistoryNavigator()
 
     def read_line(self, prompt: str = "$ ") -> str:
         fd = sys.stdin.fileno()
@@ -19,13 +21,36 @@ class ManualAutoCompleter:
             buffer = ""
             while True:
                 ch = sys.stdin.read(1)
-                if ch == "\t":
+                if ch == "\x1b":
+                    # Possible escape sequence
+                    ch2 = sys.stdin.read(1)
+                    if ch2 == "[":
+                        ch3 = sys.stdin.read(1)
+                        if ch3 == "A":  # Up arrow
+                            prev_cmd = self.navigator.get_previous()
+                            if prev_cmd is not None:
+                                # Clear current line
+                                sys.stdout.write("\r" + " " * (len(prompt) + len(buffer)) + "\r")
+                                buffer = prev_cmd
+                                sys.stdout.write(prompt + buffer)
+                                sys.stdout.flush()
+                        elif ch3 == "B":  # Down arrow
+                            next_cmd = self.navigator.get_next()
+                            if next_cmd is not None:
+                                # Clear current line
+                                sys.stdout.write("\r" + " " * (len(prompt) + len(buffer)) + "\r")
+                                buffer = next_cmd
+                                sys.stdout.write(prompt + buffer)
+                                sys.stdout.flush()
+                    # Ignore other escape sequences
+                elif ch == "\t":
                         inserted = self._handle_completion(buffer)
                         buffer += inserted
                         sys.stdout.write(inserted)
                         sys.stdout.flush()
                 elif ch in ("\n", "\r"):
                     sys.stdout.write("\n")
+                    self.navigator.reset()
                     return buffer
                 elif ch == "\x7f":
                     if buffer:
@@ -36,6 +61,7 @@ class ManualAutoCompleter:
                     buffer += ch
                     sys.stdout.write(ch)
                     sys.stdout.flush()
+                    self.navigator.reset()
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_attrs)
 
