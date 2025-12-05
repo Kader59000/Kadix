@@ -42,22 +42,16 @@ class HistoryManager:
                 # fichier non existant -> démarrer vide (déjà essayé de créer)
                 pass
 
-    def logCommand(self, command: str, max_entries: Optional[int] = None) -> None:
+    def logCommand(self, command: str) -> None:
         """Ajoute `command` à l'historique et l'écrit dans le fichier (si configuré).
 
-        Le paramètre `command` est stocké tel quel (chaîne). Si `max_entries`
-        est défini, on tronque l'historique pour conserver uniquement les
-        dernières entrées.
+        Le paramètre `command` est stocké tel quel (chaîne).
         """
         if command is None:
             return
         cmd = str(command)
-        max_entries = max_entries if max_entries is None else int(max_entries)
         with self._lock:
             self._history.append(cmd)
-            if max_entries is not None and len(self._history) > max_entries:
-                # conserver les dernières `max_entries`
-                self._history = self._history[-max_entries :]
 
             if self.history_file:
                 # ouvrir en append et écrire la ligne
