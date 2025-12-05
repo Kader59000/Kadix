@@ -42,7 +42,7 @@ class InstalledCommand(Command):
         sys.stdin = sys.__stdin__
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
-        HistoryManager.getInstance().logCommand(f"{self.name}")
+        HistoryManager.getInstance().logCommand(f"{self.name} {' '.join(self.args)}")
         return process
 
     def spawn(self, stdin=None, stdout=None, stderr=None):
@@ -126,6 +126,6 @@ class BuiltinCommand(Command):
             sys.stdin = sys.__stdin__
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
-            HistoryManager.getInstance().logCommand(f"{self.name}")   
+            HistoryManager.getInstance().logCommand(f"{self.name} {' '.join(self.args)}")   
             return command_result
         raise CommandNotFoundException(f"{self.name}: builtin command not found")
