@@ -71,10 +71,24 @@ class HistoryManager:
                     # N'échoue pas si on ne peut pas écrire l'historique
                     pass
 
-    def getHistory(self, max_entries: Optional[int] = None) -> List[tuple[int, str]]:
-        """Retourne une copie de la liste d'historique (de la plus ancienne à la plus récente)."""
-        max_entries = max_entries if max_entries is None else int(max_entries)
-        with self._lock:
-            if max_entries is not None:
-                return list(self._history[-max_entries:])
-            return list(self._history)
+    def setHistoryFile(self, history_file):
+        """Change le fichier d'historique et recharge l'historique."""
+        self.history_file = os.path.abspath(history_file)
+        # Recharger l'historique
+        self._history = []
+        self._next_index = 1
+        if self.history_file:
+            try:
+                open(self.history_file, "a", encoding="utf-8").close()
+            except Exception:
+                self.history_file = None
+            if self.history_file:
+                try:
+                    with open(self.history_file, "r", encoding="utf-8") as f:
+                        for line in f:
+                            line = line.rstrip("\n")
+                            if line:
+                                self._history.append((self._next_index, line))
+                                self._next_index += 1
+                except FileNotFoundError:
+                    pass

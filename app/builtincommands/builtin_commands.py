@@ -29,14 +29,7 @@ def history_command(args):
             print("history -r: missing file operand")
             return
         file_path = os.path.expanduser(args[1])
-        try:
-            hist_mgr = HistoryManager.getInstance(file_path)
-            for index, command in hist_mgr.getHistory():
-                print(f"    {index}  {command}")
-        except FileNotFoundError:
-            print(f"history -r: {file_path}: No such file or directory")
-        except Exception as e:
-            print(f"history -r: error reading {file_path}: {e}")
+        HistoryManager.getInstance().setHistoryFile(file_path)
     else:
         max_entries = None
         if args:
