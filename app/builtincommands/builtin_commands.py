@@ -25,6 +25,7 @@ def pwd_command(args):
 
 def history_command(args):
     history = HistoryManager.getInstance()
+    history.logCommand('history')
     for index, command in enumerate(history.getHistory(), start=1):
         print(f"    {index}  {command}")
 
