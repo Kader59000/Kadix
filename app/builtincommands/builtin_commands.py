@@ -24,12 +24,30 @@ def pwd_command(args):
     print(os.getcwd())
 
 def history_command(args):
-    max_entries = None
-    if len(args) != 0:
-        max_entries = args[0]
-    history = HistoryManager.getInstance()
-    for index, command in history.getHistory(max_entries):
-        print(f"    {index}  {command}")
+    if args and args[0] == '-r':
+        if len(args) < 2:
+            print("history -r: missing file operand")
+            return
+        file_path = os.path.expanduser(args[1])
+        try:
+            hist_mgr = HistoryManager(file_path)
+            for index, command in hist_mgr.getHistory():
+                print(f"    {index}  {command}")
+        except FileNotFoundError:
+            print(f"history -r: {file_path}: No such file or directory")
+        except Exception as e:
+            print(f"history -r: error reading {file_path}: {e}")
+    else:
+        max_entries = None
+        if args:
+            try:
+                max_entries = int(args[0])
+            except ValueError:
+                print("history: invalid number of entries")
+                return
+        history = HistoryManager()
+        for index, command in history.getHistory(max_entries):
+            print(f"    {index}  {command}")
 
 def cd_command(args):
     if len(args) != 1:

@@ -3,7 +3,7 @@ from typing import Optional
 
 class HistoryNavigator:
     def __init__(self):
-        self.history = HistoryManager.getInstance()
+        self.history = HistoryManager()
         self.current_index = None  # None means not navigating, at the end
 
     def get_previous(self) -> Optional[str]:

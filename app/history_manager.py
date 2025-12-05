@@ -10,19 +10,15 @@ class HistoryManager:
     `./history_file.txt`. Si le fichier n'existe pas il sera créé.
     """
 
-    @staticmethod
-    def getInstance():
-        """Retourne l'instance singleton de HistoryManager."""
-        if not hasattr(HistoryManager, "_instance"):
-            HistoryManager._instance = HistoryManager()
-        return HistoryManager._instance
-
-    def __init__(self):
+    def __init__(self, history_file=None):
         self._lock = threading.Lock()
         self._history: List[tuple[int, str]] = []
         self._next_index = 1
-        # fichier d'historique fixe (relatif au cwd)
-        self.history_file = os.path.abspath("./history_file.txt")
+        # fichier d'historique
+        if history_file is None:
+            self.history_file = os.path.abspath("./history_file.txt")
+        else:
+            self.history_file = os.path.abspath(history_file)
 
         # s'assurer que le fichier existe (création si besoin)
         try:
@@ -32,7 +28,7 @@ class HistoryManager:
             self.history_file = None
 
         # Charger l'historique existant si le fichier est présent
-        if self.history_file and False:
+        if self.history_file:
             try:
                 with open(self.history_file, "r", encoding="utf-8") as f:
                     for line in f:
