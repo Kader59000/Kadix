@@ -24,6 +24,20 @@ class HistoryManager:
         self.history: List[str] = []
         # index (nombre d'entrées) déjà écrites par les appels à appendHistoryToFile
         self._last_appended_index = 0
+        # Charger l'historique depuis le fichier par défaut (si présent)
+        try:
+            hist_file = getattr(self, 'history_file', None) or HistoryManager.history_file
+            if hist_file and os.path.exists(hist_file):
+                with open(hist_file, 'r', encoding='utf-8') as f:
+                    for line in f:
+                        line = line.rstrip('\n')
+                        if line:
+                            self.history.append(line)
+                # Considérer que ces lignes existent déjà dans le fichier
+                self._last_appended_index = len(self.history)
+        except Exception:
+            # Ne pas échouer si lecture impossible
+            pass
 
     def getHistory(self, max_entries = None):
         """Retourne l'historique des commandes.
