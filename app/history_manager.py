@@ -20,6 +20,8 @@ class HistoryManager:
 
     def __init__(self):
         self.history: List[str] = []
+        # index (nombre d'entrées) déjà écrites par les appels à appendHistoryToFile
+        self._last_appended_index = 0
 
     def getHistory(self, max_entries = None):
         """Retourne l'historique des commandes.
@@ -48,6 +50,8 @@ class HistoryManager:
             with open(file_path, 'r') as f:
                 for line in f:
                     self.history.append(line.rstrip('\n'))
+            # Considérer que le fichier contient déjà ces entrées
+            self._last_appended_index = len(self.history)
 
     def saveHistoryToFile(self, file_path: Optional[str] = None):
         """Sauvegarde l'historique dans un fichier.
@@ -58,9 +62,14 @@ class HistoryManager:
         """
         if file_path is None:
             file_path = self.history_file
-        with open(file_path, 'w') as f:
+        parent = os.path.dirname(os.path.abspath(file_path))
+        if parent and not os.path.exists(parent):
+            os.makedirs(parent, exist_ok=True)
+        with open(file_path, 'w', encoding='utf-8') as f:
             for command in self.history:
-                f.write(command + '\n')
+                f.write(command.rstrip('\n') + '\n')
+        # après écriture complète, marquer tout comme déjà appendé
+        self._last_appended_index = len(self.history)
 
     def appendHistoryToFile(self, file_path: Optional[str] = None):
         """Ajoute l'historique courant à un fichier existant.
@@ -71,7 +80,16 @@ class HistoryManager:
         """
         if file_path is None:
             file_path = self.history_file
-        with open(file_path, 'a') as f:
-            for command in self.history:
-                f.write(command + '\n')
+        abs_path = os.path.abspath(file_path)
+        parent = os.path.dirname(abs_path)
+        if parent and not os.path.exists(parent):
+            os.makedirs(parent, exist_ok=True)
+        # n'écrire que les entrées qui n'ont pas encore été appendées
+        to_write = self.history[self._last_appended_index:]
+        if not to_write:
+            return
+        with open(abs_path, 'a', encoding='utf-8') as f:
+            for command in to_write:
+                f.write(command.rstrip('\n') + '\n')
+        self._last_appended_index = len(self.history)
 
